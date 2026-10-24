@@ -255,6 +255,16 @@ IMAGES = {
     "ghcr.io/oras-project/oras:v1.3.0": "mirror/oras:v1.3.0",
 }
 
+# Mirrored images whose platform builds are published under separate tags,
+# joined into one multi-platform tag: the compose files run it on amd64 and
+# arm64 hosts alike. Each platform's manifest keeps its digest.
+MULTIARCH = {
+    "mirror/text-embeddings-inference:cpu-1.9-multiarch": [
+        "mirror/text-embeddings-inference:cpu-1.9",
+        "mirror/text-embeddings-inference:cpu-arm64-1.9",
+    ],
+}
+
 # The build inputs brainy-worker's Dockerfile downloads, checked against the
 # same sha256 its Dockerfile pins.
 VENDOR_TAG = "brainy-worker-build:2026-10-24"
@@ -377,6 +387,33 @@ def images() -> None:
             ["oras", "resolve", destination], check=True, capture_output=True, text=True
         ).stdout.strip()
         lock["images"][source] = f"{destination}@{digest}"
+    for target, parts in MULTIARCH.items():
+        platforms = []
+        for part in parts:
+            index = json.loads(
+                subprocess.run(
+                    ["oras", "manifest", "fetch", f"{REGISTRY}/{part}"],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                ).stdout
+            )
+            # The images' platform manifests, not their attestations.
+            platforms += [
+                f"{REGISTRY}/{part.split(':')[0]}@{entry['digest']}"
+                for entry in index.get("manifests", [])
+                if entry.get("platform", {}).get("os") == "linux"
+            ]
+        destination = f"{REGISTRY}/{target}"
+        print(f"{' + '.join(parts)} -> {destination}", flush=True)
+        subprocess.run(
+            ["docker", "buildx", "imagetools", "create", "-t", destination, *platforms],
+            check=True,
+        )
+        digest = subprocess.run(
+            ["oras", "resolve", destination], check=True, capture_output=True, text=True
+        ).stdout.strip()
+        lock["images"][target] = f"{destination}@{digest}"
     _write(lock)
 
 

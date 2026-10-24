@@ -338,7 +338,8 @@
   "images": {
     "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9": "ghcr.io/brainy-org/mirror/text-embeddings-inference:cpu-1.9@sha256:2538ea1c9640d3763b15af668039d24172d063b42337b0c27796fc2be180c78d",
     "ghcr.io/huggingface/text-embeddings-inference:cpu-arm64-1.9": "ghcr.io/brainy-org/mirror/text-embeddings-inference:cpu-arm64-1.9@sha256:798cd7615e060a72ccbdf19aa0ada52289c6a0147490195bafaece6ce04d70f1",
-    "ghcr.io/oras-project/oras:v1.3.0": "ghcr.io/brainy-org/mirror/oras:v1.3.0@sha256:6ce045ce069a89934d6666b8b49f9c4c0145201bd6de6dbe2aee267814c55468"
+    "ghcr.io/oras-project/oras:v1.3.0": "ghcr.io/brainy-org/mirror/oras:v1.3.0@sha256:6ce045ce069a89934d6666b8b49f9c4c0145201bd6de6dbe2aee267814c55468",
+    "mirror/text-embeddings-inference:cpu-1.9-multiarch": "ghcr.io/brainy-org/mirror/text-embeddings-inference:cpu-1.9-multiarch@sha256:47a0bf63f6089c0814e8d8d43fb219a42c6882fbaab7d92dd7c37e41c5403096"
   },
   "vendor": {
     "files": {
