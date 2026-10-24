@@ -1,0 +1,364 @@
+{
+  "bundles": {
+    "docling": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "ffcd7be09c2da950623f7cf941859dfbbaf53fa1bbc710b98bd666f55d2df420",
+          "size": 3618
+        },
+        "RapidOcr/PP-OCRv6_det_small.onnx": {
+          "sha256": "090f04abcd9d9a7498bc4ebf677e4cb9bdce1fe4197ddb7e529f1ef44e1ff94f",
+          "size": 9929594
+        },
+        "RapidOcr/PP-OCRv6_rec_small.onnx": {
+          "sha256": "6f327246b50388f3c176ae304bd95767ea6dc0c9ae92153ef8cbe210b3c14884",
+          "size": 21234383
+        },
+        "RapidOcr/arabic_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "c1192e632d0baa9146ae5b756a0e635e3dc63c1733737ebfd1629e87144e9295",
+          "size": 8023828
+        },
+        "RapidOcr/ch_PP-OCRv4_det_mobile.onnx": {
+          "sha256": "d2a7720d45a54257208b1e13e36a8479894cb74155a5efe29462512d42f49da9",
+          "size": 4745517
+        },
+        "RapidOcr/ch_PP-OCRv5_det_mobile.onnx": {
+          "sha256": "4d97c44a20d30a81aad087d6a396b08f786c4635742afc391f6621f5c6ae78ae",
+          "size": 4819576
+        },
+        "RapidOcr/ch_ppocr_mobile_v2.0_cls_mobile.onnx": {
+          "sha256": "e47acedf663230f8863ff1ab0e64dd2d82b838fceb5957146dab185a89d6215c",
+          "size": 585532
+        },
+        "RapidOcr/cyrillic_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "90f761b4bfcce0c8c561c0cb5c887b0971d3ec01c32164bdf7374a35b0982711",
+          "size": 8074092
+        },
+        "RapidOcr/devanagari_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "d6f0a906580e3fa6b324a318718f1f31f268b6ea8ef985f91c2012a37f52c91e",
+          "size": 7940361
+        },
+        "RapidOcr/el_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "b4368bccd557123c702b7549fee6cd1e94b581337d1c9b65310f109131542b7f",
+          "size": 7832350
+        },
+        "RapidOcr/eslav_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "08705d6721849b1347d26187f15a5e362c431963a2a62bfff4feac578c489aab",
+          "size": 7911802
+        },
+        "RapidOcr/ka_PP-OCRv4_rec_mobile.onnx": {
+          "sha256": "9c1e186ea1d13cf6c853e57b42d382c3961fdd6acc2409e0d0dc44defc9f152b",
+          "size": 7681381
+        },
+        "RapidOcr/korean_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "cd6e2ea50f6943ca7271eb8c56a877a5a90720b7047fe9c41a2e541a25773c9b",
+          "size": 13488748
+        },
+        "RapidOcr/latin_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "b20bd37c168a570f583afbc8cd7925603890efbcdc000a59e22c269d160b5f5a",
+          "size": 7904513
+        },
+        "RapidOcr/ta_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "a42448808b7dea87597336f12438935f40353f1949e8360acd9e06b4da21bfe1",
+          "size": 7909926
+        },
+        "RapidOcr/te_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "a3690451b50028a09a3316a1274f7c05728151ea3f8fd392696397a7fefcbd92",
+          "size": 7923102
+        },
+        "RapidOcr/th_PP-OCRv5_rec_mobile.onnx": {
+          "sha256": "de541dd83161c241ff426f7ecfd602a0ba77d686cf3ab9a6c255ea82fd08006e",
+          "size": 7915294
+        },
+        "docling-project--CodeFormulaV2/.gitattributes": {
+          "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+          "size": 1519
+        },
+        "docling-project--CodeFormulaV2/README.md": {
+          "sha256": "684604c08aa8cc32b3d65049bc9794b57f3fc510953148ad3ba61d35f60bef9a",
+          "size": 1511
+        },
+        "docling-project--CodeFormulaV2/added_tokens.json": {
+          "sha256": "002686b2efb9535c359458cd1121de8e1b58e67426a46e2bd4425843766a3a5e",
+          "size": 975
+        },
+        "docling-project--CodeFormulaV2/chat_template.json": {
+          "sha256": "c9d21553af689882ac89ad8e8412164662d1605f6595119664e85626df7be421",
+          "size": 422
+        },
+        "docling-project--CodeFormulaV2/config.json": {
+          "sha256": "98f55cfe07dd168f9fab1f1eec35f754b23631ea1a9a7c9759b1b7cb41ab76b1",
+          "size": 2638
+        },
+        "docling-project--CodeFormulaV2/generation_config.json": {
+          "sha256": "b17f1890b2b2baf172761c9c4d6eb956482ffa05964f357e67544ec998c9851f",
+          "size": 169
+        },
+        "docling-project--CodeFormulaV2/model.safetensors": {
+          "sha256": "4b04e77af34c4e682a7ab1617628340d658f3c3dcd12456dd2a7fff805cf79d2",
+          "size": 630993616
+        },
+        "docling-project--CodeFormulaV2/preprocessor_config.json": {
+          "sha256": "6cb6e36d6fcb88ca1502c4a26750715dc3e7dedddc9a8f17b27d8d167d1457e7",
+          "size": 486
+        },
+        "docling-project--CodeFormulaV2/processor_config.json": {
+          "sha256": "e7bff42da73ae9eec9042ef20e066e11f1ee20f025358ff79131e3c0fb549b46",
+          "size": 68
+        },
+        "docling-project--CodeFormulaV2/special_tokens_map.json": {
+          "sha256": "1b17e900a73384d256db6f1a7591fd0d95c09e6aede680022b047386b97afcba",
+          "size": 1071
+        },
+        "docling-project--CodeFormulaV2/tokenizer.json": {
+          "sha256": "5ec5d3780a2e01b140cf34f023eb600263855a99aacdc3eb0f2600d7b1b4ac96",
+          "size": 7160031
+        },
+        "docling-project--CodeFormulaV2/tokenizer_config.json": {
+          "sha256": "37a0e94be9c9ab5197b2188e61cf764bbc015f45261013881fe37bd2fe8599e6",
+          "size": 24952
+        },
+        "docling-project--CodeFormulaV2/vocab.json": {
+          "sha256": "8922f7e91084b9862d270c16ce1027071214aa252a1567a4b410f952101005fc",
+          "size": 1612747
+        },
+        "docling-project--docling-layout-heron/.gitattributes": {
+          "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+          "size": 1519
+        },
+        "docling-project--docling-layout-heron/README.md": {
+          "sha256": "175700839bc7808eac6af1d0c23e4f483606ab2276fe01122f4093e61a1a65b6",
+          "size": 3219
+        },
+        "docling-project--docling-layout-heron/config.json": {
+          "sha256": "fdea30805ce2f5666b147fca941dcdd27ad468e27d6ed21902207d3da056a97d",
+          "size": 3268
+        },
+        "docling-project--docling-layout-heron/model.safetensors": {
+          "sha256": "00333a43451945aaf89db8ca9c0a17e75d1537c17db60fdb91aa95f4c7929e0c",
+          "size": 171658996
+        },
+        "docling-project--docling-layout-heron/preprocessor_config.json": {
+          "sha256": "cd38cd59999e7a95d68e487fbe5132df3d4e5c32a0836add57e6126ba0c4eaf1",
+          "size": 444
+        },
+        "docling-project--docling-models/README.md": {
+          "sha256": "d17f233378eff1240b623b36da76ee8b40afcca05d505949713bf03f7e00822a",
+          "size": 3413
+        },
+        "docling-project--docling-models/config.json": {
+          "sha256": "9c34024dc28ff47b75818f415e769809798c29bf9bde6f2ccc63a4acb62396d9",
+          "size": 41
+        },
+        "docling-project--docling-models/model_artifacts/tableformer/accurate/tableformer_accurate.safetensors": {
+          "sha256": "2a7d6c924b3cd12fb99a09280ca9c33a89c5d60b93253617d2e088c1a40374d9",
+          "size": 212758388
+        },
+        "docling-project--docling-models/model_artifacts/tableformer/accurate/tm_config.json": {
+          "sha256": "984e122ceb8ccf84d84c9d2882f6f2302a44b4f1e577babd6289892c36f3cffd",
+          "size": 7060
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/docling:docling-2.137.0@sha256:26cf7f3768b933cf01b62cf72ad928fc11bb6eada04e5128826c4c7fb7afdd36",
+      "sources": [
+        {
+          "commit": "8f39ad3c0b4c58e9c2d2c84a38465abf757272d8",
+          "licence": "Apache-2.0",
+          "repo": "docling-project/docling-layout-heron"
+        },
+        {
+          "commit": "fc0f2d45e2218ea24bce5045f58a389aed16dc23",
+          "licence": "CDLA-Permissive-2.0",
+          "repo": "docling-project/docling-models"
+        },
+        {
+          "commit": "ecedbe111d15c2dc60bfd4a823cbe80127b58af4",
+          "licence": "CDLA-Permissive-2.0",
+          "repo": "docling-project/CodeFormulaV2"
+        }
+      ],
+      "used_by": [
+        "brainy-worker (docling's artifacts_path)"
+      ]
+    },
+    "libparakeet": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "62586c95fd5b797c17fe2268364804e40a9e3ee3ffa29e67fbf7eba241d2f1ad",
+          "size": 1371
+        },
+        "parakeet-v0.6.1-lib-linux-cpu-arm64.tar.gz": {
+          "sha256": "d9e56bab07f87b6c05593a039f7cfe5b6033995da80f21721f167bfb41698c42",
+          "size": 1318743
+        },
+        "parakeet-v0.6.1-lib-linux-cpu-x64.tar.gz": {
+          "sha256": "5a2b439e83d1b6ab66c55bcfc48751ee48e53727d5b3ea33a6bc0e8626f1397c",
+          "size": 1490872
+        },
+        "parakeet-v0.6.1-lib-linux-cuda-x64.tar.gz": {
+          "sha256": "f717526c49d56cd4691390ca4c8e521a27eec698a93f3897bf3817ceb744378a",
+          "size": 564111941
+        },
+        "parakeet-v0.6.1-lib-macos-cpu-x64.tar.gz": {
+          "sha256": "4575814a5abb2d8d78b657750a3418cf2178765aa8f2f4ebfd692bf78fda9e7d",
+          "size": 1461523
+        },
+        "parakeet-v0.6.1-lib-macos-metal-arm64.tar.gz": {
+          "sha256": "1847118600359355c899619e263275d83b59f81dcc34fcca6ba4e6b9aac67db0",
+          "size": 1346646
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libparakeet:v0.6.1@sha256:b07a5dc0add3ba9f1d4ca16f8c639c1a8b8354ee4dae716043717c77ce56e35b",
+      "sources": [],
+      "used_by": [
+        "logbook (scripts/server.sh)"
+      ]
+    },
+    "parakeet": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "0226e6c52a202118094f302ca8246c39e0df2e16005ee4bcbe796ebae7f54e67",
+          "size": 395
+        },
+        "README.md": {
+          "sha256": "d053a9384be1412eb1ff2397793ba878f3809cc3b37d84477f8c1ba495d7a1d8",
+          "size": 24888
+        },
+        "nemotron-3-diarization-q8_0.gguf": {
+          "sha256": "76c5bb1fb20d82706142ad32769b7ab496d2458489473a000fd7074c52ceec22",
+          "size": 108674624
+        },
+        "silero-vad-f16.gguf": {
+          "sha256": "8160489282352accc0e95925c2f6bf3d76fb8f7bccdce5c7e46808cb15e8443c",
+          "size": 1264928
+        },
+        "tdt-0.6b-v3-q8_0.gguf": {
+          "sha256": "4d69a4a6683f4f2d952bad794c1357ca6eb628027695b4699c5a9ad4cd07d757",
+          "size": 940663680
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/parakeet:741158ae@sha256:337758c8d58427fe2ca33b107ff89291421143a04353c8ed8c1246e828bfab9a",
+      "sources": [
+        {
+          "commit": "741158ae71e64ef5c89385862c18f777d07a97a1",
+          "licence": "CC-BY-4.0 (nvidia/parakeet-tdt-0.6b-v3), OpenMDW-1.1 (nvidia/Nemotron-3-Diarization), MIT (Silero VAD)",
+          "repo": "mudler/parakeet-cpp-gguf"
+        }
+      ],
+      "used_by": [
+        "brainy-worker (recordings)",
+        "logbook"
+      ]
+    },
+    "qwen3-embedding-0.6b": {
+      "files": {
+        "1_Pooling/config.json": {
+          "sha256": "7652a48b1c8ceb3f7d1c96e4b53d50b79231be6876f40e37534ecccdffbd5551",
+          "size": 297
+        },
+        "NOTICE.md": {
+          "sha256": "c10455a8da78f1b96025095798859863d2927ab13ffa653262e8f5e14c6c6b9c",
+          "size": 231
+        },
+        "README.md": {
+          "sha256": "165914ec295689ae52c6e653221506912feb98d64043e03c3a27632aa135b0a3",
+          "size": 17237
+        },
+        "added_tokens.json": {
+          "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+          "size": 707
+        },
+        "chat_template.jinja": {
+          "sha256": "87a2728cb8dc9fe424d624542f6060ec05a1d285ebbec578bb078900e33396b5",
+          "size": 4116
+        },
+        "config.json": {
+          "sha256": "ea91a57bab0d3ffa9ab0748750cca5ac1e60bdea3b59d9fb13c395de6e04cddc",
+          "size": 727
+        },
+        "config_sentence_transformers.json": {
+          "sha256": "370cafcae4acd63f6ae82c19466d473b00ffab8ac2204d22d44dee002bbd6f72",
+          "size": 330
+        },
+        "generation_config.json": {
+          "sha256": "28396d421a2108acce96383f6a7de78008f7f1b17f807958f3c14c51dbfb65fb",
+          "size": 117
+        },
+        "merges.txt": {
+          "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+          "size": 1671853
+        },
+        "modules.json": {
+          "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf",
+          "size": 349
+        },
+        "onnx/model.onnx": {
+          "sha256": "55a191d290e740e4bd2f37915aff5107503b60d318b636b95da8aa88ef026a7f",
+          "size": 1577664
+        },
+        "onnx/model.onnx_data": {
+          "sha256": "7c7569e58783ee0ad8c5fb797d7944aa4f5928af53fb4c1f626f71885af22969",
+          "size": 2383077376
+        },
+        "sentence_bert_config.json": {
+          "sha256": "1140b92d307aec9383d897169c9f489f3a568787b80bf760f5d7cc9d25169a65",
+          "size": 55
+        },
+        "special_tokens_map.json": {
+          "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+          "size": 613
+        },
+        "tokenizer.json": {
+          "sha256": "def76fb086971c7867b829c23a26261e38d9d74e02139253b38aeb9df8b4b50a",
+          "size": 11423705
+        },
+        "tokenizer_config.json": {
+          "sha256": "443bfa629eb16387a12edbf92a76f6a6f10b2af3b53d87ba1550adfcf45f7fa0",
+          "size": 5404
+        },
+        "vocab.json": {
+          "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+          "size": 2776833
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/qwen3-embedding-0.6b:3d106eab@sha256:52db9581ddca514b21bfaa429444c10580161e72bc5af87e107fe4d24004ec2e",
+      "sources": [
+        {
+          "commit": "3d106eabb5535a84de3ae88f45887a78259b52de",
+          "licence": "Apache-2.0",
+          "repo": "Qwen/Qwen3-Embedding-0.6B"
+        }
+      ],
+      "used_by": [
+        "brainy (TEI)",
+        "galley (TEI)"
+      ]
+    }
+  },
+  "images": {
+    "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9": "ghcr.io/brainy-org/mirror/text-embeddings-inference:cpu-1.9@sha256:2538ea1c9640d3763b15af668039d24172d063b42337b0c27796fc2be180c78d",
+    "ghcr.io/huggingface/text-embeddings-inference:cpu-arm64-1.9": "ghcr.io/brainy-org/mirror/text-embeddings-inference:cpu-arm64-1.9@sha256:798cd7615e060a72ccbdf19aa0ada52289c6a0147490195bafaece6ce04d70f1",
+    "ghcr.io/oras-project/oras:v1.3.0": "ghcr.io/brainy-org/mirror/oras:v1.3.0@sha256:6ce045ce069a89934d6666b8b49f9c4c0145201bd6de6dbe2aee267814c55468"
+  },
+  "vendor": {
+    "files": {
+      "ffmpeg-8.1.3.tar.xz": {
+        "sha256": "7138d28c96d9d3e3af4ee3d8cad72741f8ffb40da90c1112235dea3ecd3178a3",
+        "url": "https://ffmpeg.org/releases/ffmpeg-8.1.3.tar.xz"
+      },
+      "parakeet-v0.6.1-lib-linux-cpu-arm64.tar.gz": {
+        "sha256": "d9e56bab07f87b6c05593a039f7cfe5b6033995da80f21721f167bfb41698c42",
+        "url": "https://github.com/mudler/parakeet.cpp/releases/download/v0.6.1/parakeet-v0.6.1-lib-linux-cpu-arm64.tar.gz"
+      },
+      "parakeet-v0.6.1-lib-linux-cpu-x64.tar.gz": {
+        "sha256": "5a2b439e83d1b6ab66c55bcfc48751ee48e53727d5b3ea33a6bc0e8626f1397c",
+        "url": "https://github.com/mudler/parakeet.cpp/releases/download/v0.6.1/parakeet-v0.6.1-lib-linux-cpu-x64.tar.gz"
+      },
+      "parakeet-v0.6.1-lib-linux-cuda-x64.tar.gz": {
+        "sha256": "f717526c49d56cd4691390ca4c8e521a27eec698a93f3897bf3817ceb744378a",
+        "url": "https://github.com/mudler/parakeet.cpp/releases/download/v0.6.1/parakeet-v0.6.1-lib-linux-cuda-x64.tar.gz"
+      }
+    },
+    "ref": "ghcr.io/brainy-org/vendor/brainy-worker-build:2026-10-24@sha256:e4baab083cfe79b8dc566b7f49f3db469219681699f3e2de90683433111562f9"
+  }
+}
