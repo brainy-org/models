@@ -149,6 +149,103 @@ def _release(
     return fetch
 
 
+def _bundle_component(
+    url: str, sha256: str, component: str, name: str, source_sha256: str, licence: str
+) -> Callable[[Path], list[dict[str, str]]]:
+    """One model of a parakeet.cpp bundle GGUF, written back as the
+    standalone GGUF it was packed from: the bundle's keys and tensors under
+    `<component>.`, without the prefix, in order, with the same data. The
+    bundle names that file's sha256 (`parakeet.bundle.<component>.
+    source_sha256`), and the result must have it: the file mirrored is the
+    upstream file byte for byte, without the bundle's other models."""
+
+    def fetch(directory: Path) -> list[dict[str, str]]:
+        cache = WORK / "downloads"
+        cache.mkdir(parents=True, exist_ok=True)
+        packed = cache / url.rsplit("/", 1)[1]
+        if not packed.exists() or _sha256(packed) != sha256:
+            print(f"  {url}", flush=True)
+            with urllib.request.urlopen(url) as response, packed.open("wb") as out:
+                shutil.copyfileobj(response, out)
+        if _sha256(packed) != sha256:
+            sys.exit(f"{packed.name} does not match its sha256")
+        out = directory / name
+        _extract_component(packed, component, out)
+        if _sha256(out) != source_sha256:
+            sys.exit(f"{name}, extracted from {packed.name}, is not the file the bundle names")
+        return [{"url": f"{url} (component `{component}`)", "path": name, "licence": licence}]
+
+    return fetch
+
+
+def _extract_component(bundle: Path, component: str, out: Path) -> None:
+    import struct
+
+    sizes = {0: 1, 1: 1, 2: 2, 3: 2, 4: 4, 5: 4, 6: 4, 7: 1, 10: 8, 11: 8, 12: 8}
+    with bundle.open("rb") as f:
+        if f.read(4) != b"GGUF":
+            sys.exit(f"{bundle.name} is not a GGUF file")
+        (version,) = struct.unpack("<I", f.read(4))
+        n_tensors, n_kv = struct.unpack("<QQ", f.read(16))
+
+        def string() -> bytes:
+            (n,) = struct.unpack("<Q", f.read(8))
+            return f.read(n)
+
+        def value(kind: int) -> bytes:
+            # The value's bytes as stored, to be written back unchanged.
+            if kind in sizes:
+                return f.read(sizes[kind])
+            if kind == 8:
+                s = string()
+                return struct.pack("<Q", len(s)) + s
+            if kind == 9:
+                (item,) = struct.unpack("<I", f.read(4))
+                (n,) = struct.unpack("<Q", f.read(8))
+                return struct.pack("<IQ", item, n) + b"".join(value(item) for _ in range(n))
+            sys.exit(f"{bundle.name}: unknown GGUF value type {kind}")
+
+        prefix = component.encode() + b"."
+        keys, alignment = [], 32
+        for _ in range(n_kv):
+            key = string()
+            (kind,) = struct.unpack("<I", f.read(4))
+            raw = value(kind)
+            if key.startswith(prefix):
+                keys.append((key[len(prefix) :], kind, raw))
+                if key[len(prefix) :] == b"general.alignment":
+                    (alignment,) = struct.unpack("<I", raw)
+        tensors = []
+        for _ in range(n_tensors):
+            name = string()
+            (dims,) = struct.unpack("<I", f.read(4))
+            shape = f.read(8 * dims)
+            kind, offset = struct.unpack("<IQ", f.read(12))
+            if name.startswith(prefix):
+                tensors.append((name[len(prefix) :], dims, shape, kind, offset))
+        if not tensors:
+            sys.exit(f"{bundle.name} has no component {component}")
+        data = (f.tell() + 31) // 32 * 32
+        first = min(t[4] for t in tensors)
+        last = max(tensors, key=lambda t: t[4])
+        elements = 1
+        for i in range(last[1]):
+            elements *= struct.unpack("<Q", last[2][8 * i : 8 * i + 8])[0]
+        type_size = {0: 4, 1: 2}.get(last[3])
+        if type_size is None:
+            sys.exit(f"{bundle.name}: the last tensor of {component} is not F32 or F16")
+        header = bytearray(b"GGUF" + struct.pack("<IQQ", version, len(tensors), len(keys)))
+        for key, kind, raw in keys:
+            header += struct.pack("<Q", len(key)) + key + struct.pack("<I", kind) + raw
+        for name, dims, shape, kind, offset in tensors:
+            header += struct.pack("<Q", len(name)) + name + struct.pack("<I", dims) + shape
+            header += struct.pack("<IQ", kind, offset - first)
+        header += b"\0" * (-len(header) % alignment)
+        f.seek(data + first)
+        body = f.read(last[4] - first + elements * type_size)
+    out.write_bytes(bytes(header) + body)
+
+
 # libparakeet v0.6.1, the builds brainy-worker's image and logbook load; the
 # sha256 are the release's own (GitHub's asset digests, 2026-10-24).
 PARAKEET_RELEASE = {
@@ -215,6 +312,23 @@ BUNDLES: dict[str, Bundle] = {
                     "GGUF by mudler (parakeet.cpp).",
                 ),
             ],
+        ),
+        Bundle(
+            name="parakeet-voice",
+            tag="741158ae",
+            used_by=["logbook (final pass: more than eight speakers)"],
+            description="WeSpeaker ResNet34-LM speaker encoder, as parakeet.cpp loads it (GGUF)",
+            extra=_bundle_component(
+                "https://huggingface.co/mudler/parakeet-cpp-gguf/resolve/"
+                "741158ae71e64ef5c89385862c18f777d07a97a1/parakeet-bundle-small.gguf",
+                "5f2c6697eb08d4d67e858692d4223a9d911aacc51ae16cf2aee9e760f8a2269a",
+                "voice",
+                "wespeaker-resnet34-lm.gguf",
+                "72040372494eafec299836bc1977cfc13c603cb486674ed59b0f4c03758d29da",
+                "CC-BY-4.0: WeSpeaker ResNet34-LM (large-margin fine-tuned, trained on "
+                "VoxCeleb2 dev) by the WeSpeaker project (https://github.com/wenet-e2e/wespeaker), "
+                "converted from its ONNX export to GGUF by mudler (voice-detect.cpp, F32)",
+            ),
         ),
         Bundle(
             name="libparakeet",

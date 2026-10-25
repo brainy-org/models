@@ -10,6 +10,7 @@ model that its author deletes, moves or rewrites changes nothing for us.
 | `docling` bundle: layout (heron), TableFormer ACCURATE, CodeFormulaV2, RapidOCR (PP-OCRv6 small and the v5/v4 recogniser of each other script) | `ghcr.io/brainy-org/models/docling` | brainy-worker (docling's `artifacts_path`) |
 | `parakeet` bundle: ASR, VAD, diarization (GGUF) | `ghcr.io/brainy-org/models/parakeet` | brainy-worker (recordings), logbook |
 | `qwen3-embedding-0.6b` bundle: Qwen3-Embedding-0.6B and its ONNX export | `ghcr.io/brainy-org/models/qwen3-embedding-0.6b` | brainy's and Galley's TEI |
+| `parakeet-voice` bundle: WeSpeaker ResNet34-LM speaker encoder (GGUF), the "voice" component of mudler's `parakeet-bundle-small` written back as its standalone file, byte for byte | `ghcr.io/brainy-org/models/parakeet-voice` | logbook (final pass speakers) |
 | `libparakeet` bundle: parakeet.cpp's release builds | `ghcr.io/brainy-org/models/libparakeet` | logbook |
 | Images: Text Embeddings Inference (amd64, arm64), oras | `ghcr.io/brainy-org/mirror/*` | the Helm charts and compose files of brainy and Galley |
 | Build inputs: ffmpeg's source, libparakeet | `ghcr.io/brainy-org/vendor/brainy-worker-build` | brainy-worker's Dockerfile (`VENDOR_IMAGE`) |
@@ -57,7 +58,7 @@ Each consumer pins what it uses, copied from `models.lock.json`:
 | brainy-worker | `src/brainy_worker/models.json` (ref and files of `docling`, `parakeet`); `VENDOR_IMAGE` in the Dockerfile | `brainy-worker models` (its own OCI client), in an init container in the charts |
 | brainy, Galley (Helm) | `tei.bundle`, `tei.revision`, `tei.image`, `tei.puller.image` in `values.yaml` | an oras init container, with the `ghcr-pull` secret |
 | brainy, Galley (compose) | the `tei-model` service, `*_TEI_IMAGE` | the same, with `GHCR_USER`/`GHCR_TOKEN` from `.env` |
-| logbook | the files' sha256 in `scripts/server.sh` | `oras blob fetch` |
+| logbook | the files' sha256 in `scripts/server.sh` (`parakeet`, `parakeet-voice`, `libparakeet`) | `oras blob fetch` |
 | the `ae` VM's TEI | brainy's `helm/README.md` | `oras pull` |
 
 ## Adding or changing a model
