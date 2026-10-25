@@ -250,6 +250,23 @@
         "logbook"
       ]
     },
+    "parakeet-voice": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "eed1fe65feddd312eb98166b2b70b6d1f884503c945580189a06d194a3320e0d",
+          "size": 540
+        },
+        "wespeaker-resnet34-lm.gguf": {
+          "sha256": "72040372494eafec299836bc1977cfc13c603cb486674ed59b0f4c03758d29da",
+          "size": 26527360
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/parakeet-voice:741158ae@sha256:712794c3a7f52f58403bb4510ed4aa666d45409ba6e2d547f1316b7943a930a6",
+      "sources": [],
+      "used_by": [
+        "logbook (final pass: more than eight speakers)"
+      ]
+    },
     "qwen3-embedding-0.6b": {
       "files": {
         "1_Pooling/config.json": {
