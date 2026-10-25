@@ -25,7 +25,7 @@ uv run mirror.py images | vendor
   and a model whose licence forbids redistribution is not mirrored.
 - **Changing a pin is a change in every consumer** (README, "Consumers"):
   brainy-worker's `models.json`, the charts' `tei.*`, the compose files,
-  logbook's `scripts/server.sh`. One commit per repository.
+  logbook's `crates/engine/src/mirror.rs`. One commit per repository.
 - **The `docling` bundle follows brainy-worker's `uv.lock`**: the docling
   and rapidocr versions in `mirror.py`'s header must match it, or the bundle
   lacks files that docling asks for (and the worker, offline, fails).

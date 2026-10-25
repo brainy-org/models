@@ -58,7 +58,7 @@ Each consumer pins what it uses, copied from `models.lock.json`:
 | brainy-worker | `src/brainy_worker/models.json` (ref and files of `docling`, `parakeet`); `VENDOR_IMAGE` in the Dockerfile | `brainy-worker models` (its own OCI client), in an init container in the charts |
 | brainy, Galley (Helm) | `tei.bundle`, `tei.revision`, `tei.image`, `tei.puller.image` in `values.yaml` | an oras init container, with the `ghcr-pull` secret |
 | brainy, Galley (compose) | the `tei-model` service, `*_TEI_IMAGE` | the same, with `GHCR_USER`/`GHCR_TOKEN` from `.env` |
-| logbook | the files' sha256 in `scripts/server.sh` (`parakeet`, `parakeet-voice`, `libparakeet`) | `oras blob fetch` |
+| logbook | the files' sha256 in `crates/engine/src/mirror.rs` (`parakeet`, `parakeet-voice`, `libparakeet`) | logbook-server itself, by blob digest, on first start |
 | the `ae` VM's TEI | brainy's `helm/README.md` | `oras pull` |
 
 ## Adding or changing a model
