@@ -2,7 +2,8 @@
 
 The mirror of what the brainy-org services download from third parties:
 model weights, the images that serve them, and the build inputs. Everything
-lives on ghcr.io/brainy-org as private packages, pinned by digest, so a
+lives on ghcr.io/brainy-org as packages (private, but for logbook's:
+"Access"), pinned by digest, so a
 model that its author deletes, moves or rewrites changes nothing for us.
 
 | What | Where | Used by |
@@ -77,7 +78,12 @@ versions in `mirror.py`'s header with `uv.lock`, push, copy the entry into
 
 ## Access
 
-The packages are private, readable with the organization's pull secret
+`models/parakeet`, `models/parakeet-voice` and `models/libparakeet` are
+public since 2026-10-26: logbook's CLI fetches them on every user's
+computer, with no token. Their licences allow it (each bundle's
+`NOTICE.md`); a public package cannot be made private again, so a bundle
+is made public only once its licences have been read for redistribution.
+The others are private, readable with the organization's pull secret
 (`ghcr-pull` in the clusters) or a token with `read:packages`. GitHub
 Actions read them with `GITHUB_TOKEN` only where a package grants the
 repository access (package settings, "Manage Actions access"): brainy-worker
