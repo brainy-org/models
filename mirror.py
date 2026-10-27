@@ -254,6 +254,9 @@ PARAKEET_RELEASE = {
     "parakeet-v0.6.1-lib-linux-cuda-x64.tar.gz": "f717526c49d56cd4691390ca4c8e521a27eec698a93f3897bf3817ceb744378a",
     "parakeet-v0.6.1-lib-macos-metal-arm64.tar.gz": "1847118600359355c899619e263275d83b59f81dcc34fcca6ba4e6b9aac67db0",
     "parakeet-v0.6.1-lib-macos-cpu-x64.tar.gz": "4575814a5abb2d8d78b657750a3418cf2178765aa8f2f4ebfd692bf78fda9e7d",
+    # Windows (2026-10-27): the Vulkan build loads the GPU driver's vulkan-1.dll.
+    "parakeet-v0.6.1-lib-win-cpu-x64.zip": "95b41515efeab246094d1793a1c0a12d727bc1cc01e4c28fe37a16a994b26774",
+    "parakeet-v0.6.1-lib-win-vulkan-x64.zip": "7ff5e20ecba4a2c78acec2917ee8ded9b416b52ba4e87e02bab43c02c2311722",
 }
 
 
@@ -333,7 +336,7 @@ BUNDLES: dict[str, Bundle] = {
         Bundle(
             name="libparakeet",
             tag="v0.6.1",
-            used_by=["logbook (scripts/server.sh)"],
+            used_by=["logbook (server, CLI and desktop app)"],
             description="libparakeet v0.6.1 release builds (parakeet.cpp's C API)",
             extra=_release(
                 PARAKEET_RELEASE,

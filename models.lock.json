@@ -184,8 +184,8 @@
     "libparakeet": {
       "files": {
         "NOTICE.md": {
-          "sha256": "62586c95fd5b797c17fe2268364804e40a9e3ee3ffa29e67fbf7eba241d2f1ad",
-          "size": 1371
+          "sha256": "d15555add51608659ddc9399d282de30314cd6f5cf56f6893450b74b3c4f4bcb",
+          "size": 1853
         },
         "parakeet-v0.6.1-lib-linux-cpu-arm64.tar.gz": {
           "sha256": "d9e56bab07f87b6c05593a039f7cfe5b6033995da80f21721f167bfb41698c42",
@@ -206,12 +206,20 @@
         "parakeet-v0.6.1-lib-macos-metal-arm64.tar.gz": {
           "sha256": "1847118600359355c899619e263275d83b59f81dcc34fcca6ba4e6b9aac67db0",
           "size": 1346646
+        },
+        "parakeet-v0.6.1-lib-win-cpu-x64.zip": {
+          "sha256": "95b41515efeab246094d1793a1c0a12d727bc1cc01e4c28fe37a16a994b26774",
+          "size": 1169291
+        },
+        "parakeet-v0.6.1-lib-win-vulkan-x64.zip": {
+          "sha256": "7ff5e20ecba4a2c78acec2917ee8ded9b416b52ba4e87e02bab43c02c2311722",
+          "size": 18369578
         }
       },
-      "ref": "ghcr.io/brainy-org/models/libparakeet:v0.6.1@sha256:b07a5dc0add3ba9f1d4ca16f8c639c1a8b8354ee4dae716043717c77ce56e35b",
+      "ref": "ghcr.io/brainy-org/models/libparakeet:v0.6.1@sha256:ced23974e2b589af0af373a4509b1a6adb8776681696f598122170d874458ef1",
       "sources": [],
       "used_by": [
-        "logbook (scripts/server.sh)"
+        "logbook (server, CLI and desktop app)"
       ]
     },
     "parakeet": {
