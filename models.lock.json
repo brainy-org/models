@@ -219,7 +219,8 @@
       "ref": "ghcr.io/brainy-org/models/libparakeet:v0.6.1@sha256:ced23974e2b589af0af373a4509b1a6adb8776681696f598122170d874458ef1",
       "sources": [],
       "used_by": [
-        "logbook (server, CLI and desktop app)"
+        "logbook (server, CLI and desktop app)",
+        "arvel (macos-metal-arm64)"
       ]
     },
     "parakeet": {
@@ -255,7 +256,8 @@
       ],
       "used_by": [
         "brainy-worker (recordings)",
-        "logbook"
+        "logbook",
+        "arvel (VAD, STT)"
       ]
     },
     "parakeet-voice": {

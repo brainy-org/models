@@ -297,7 +297,7 @@ BUNDLES: dict[str, Bundle] = {
         Bundle(
             name="parakeet",
             tag="741158ae",
-            used_by=["brainy-worker (recordings)", "logbook"],
+            used_by=["brainy-worker (recordings)", "logbook", "arvel (VAD, STT)"],
             description="parakeet.cpp GGUF models: ASR, VAD, diarization",
             sources=[
                 HfSource(
@@ -336,7 +336,7 @@ BUNDLES: dict[str, Bundle] = {
         Bundle(
             name="libparakeet",
             tag="v0.6.1",
-            used_by=["logbook (server, CLI and desktop app)"],
+            used_by=["logbook (server, CLI and desktop app)", "arvel (macos-metal-arm64)"],
             description="libparakeet v0.6.1 release builds (parakeet.cpp's C API)",
             extra=_release(
                 PARAKEET_RELEASE,
@@ -344,6 +344,32 @@ BUNDLES: dict[str, Bundle] = {
                 "MIT (parakeet.cpp, ggml); the CUDA build carries NVIDIA's "
                 "redistributable cudart and cuBLAS",
             ),
+        ),
+        Bundle(
+            name="qwen3-tts",
+            tag="b7ee2e8c",
+            used_by=["arvel (TTS)"],
+            description="Qwen3-TTS 12 Hz as qwentts.cpp loads it (GGUF): CustomVoice "
+            "talkers 0.6B and 1.7B (Q8_0), speech tokenizer (F32)",
+            sources=[
+                # main on 2026-10-30: the GGUFs date from 968442208, this
+                # commit only edits the README. The Qwen weights they are
+                # converted from are Apache-2.0 too.
+                HfSource(
+                    "Serveurperso/Qwen3-TTS-GGUF",
+                    "b7ee2e8c7459c3bea99da23e3d178125a7d1713c",
+                    "Apache-2.0",
+                    allow=[
+                        "README.md",
+                        "qwen-talker-0.6b-customvoice-Q8_0.gguf",
+                        "qwen-talker-1.7b-customvoice-Q8_0.gguf",
+                        "qwen-tokenizer-12hz-F32.gguf",
+                    ],
+                    note="Qwen3-TTS-12Hz-0.6B-CustomVoice, Qwen3-TTS-12Hz-1.7B-CustomVoice "
+                    "and Qwen3-TTS-Tokenizer-12Hz by the Qwen team (Alibaba Cloud), "
+                    "Apache-2.0, converted to GGUF by Serveurperso (qwentts.cpp).",
+                ),
+            ],
         ),
         Bundle(
             name="qwen3-embedding-0.6b",
