@@ -360,6 +360,41 @@
         "brainy (TEI)",
         "galley (TEI)"
       ]
+    },
+    "qwen3-tts": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "556658fc81d2f393633f8456c363d2e74d3dcbf9b400fe1ddbbfc86a95130d46",
+          "size": 474
+        },
+        "README.md": {
+          "sha256": "120cf739d983f43444432165bc88fca51869199dccb5ba9a8edc7587144fa409",
+          "size": 4940
+        },
+        "qwen-talker-0.6b-customvoice-Q8_0.gguf": {
+          "sha256": "4eb38675c736ed6ac72012846ac8d6ef80e5af8bc05726870f0b3a6569588519",
+          "size": 968588544
+        },
+        "qwen-talker-1.7b-customvoice-Q8_0.gguf": {
+          "sha256": "cab2cff67a0a557310febe558dc83076b28ed790e491867eb2751759f4cd89fa",
+          "size": 2042834304
+        },
+        "qwen-tokenizer-12hz-F32.gguf": {
+          "sha256": "b16b95557c7c7340a121757bd6855b9609e1cf4ad3fad0778b89393293ae5f3d",
+          "size": 647263104
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/qwen3-tts:b7ee2e8c@sha256:bf82b1e0b49f24dea0f3c9eca351368679f9d6d96eaa2c5e1800be982acc2db5",
+      "sources": [
+        {
+          "commit": "b7ee2e8c7459c3bea99da23e3d178125a7d1713c",
+          "licence": "Apache-2.0",
+          "repo": "Serveurperso/Qwen3-TTS-GGUF"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
+      ]
     }
   },
   "images": {
