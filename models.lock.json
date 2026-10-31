@@ -362,7 +362,8 @@
       "ref": "ghcr.io/brainy-org/models/parakeet-voice:741158ae@sha256:712794c3a7f52f58403bb4510ed4aa666d45409ba6e2d547f1316b7943a930a6",
       "sources": [],
       "used_by": [
-        "logbook (final pass: more than eight speakers)"
+        "logbook (final pass: more than eight speakers)",
+        "arvel (voice prints)"
       ]
     },
     "qwen3-embedding-0.6b": {

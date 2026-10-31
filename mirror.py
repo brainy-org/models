@@ -463,7 +463,7 @@ BUNDLES: dict[str, Bundle] = {
         Bundle(
             name="parakeet-voice",
             tag="741158ae",
-            used_by=["logbook (final pass: more than eight speakers)"],
+            used_by=["logbook (final pass: more than eight speakers)", "arvel (voice prints)"],
             description="WeSpeaker ResNet34-LM speaker encoder, as parakeet.cpp loads it (GGUF)",
             extra=_bundle_component(
                 "https://huggingface.co/mudler/parakeet-cpp-gguf/resolve/"
