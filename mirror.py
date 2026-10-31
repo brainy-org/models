@@ -372,6 +372,28 @@ BUNDLES: dict[str, Bundle] = {
             ],
         ),
         Bundle(
+            name="localvqe",
+            tag="29ca3849",
+            used_by=["arvel (--aec localvqe)"],
+            description="LocalVQE v1.4-AEC, a neural acoustic echo canceller "
+            "(200K parameters, F32 GGUF)",
+            sources=[
+                # main on 2026-10-31. Only the weights arvel loads: the
+                # repository also holds older versions, PyTorch checkpoints
+                # and the technical report. huggingface_hub checks the GGUF
+                # against its LFS sha256 (b6e43138...3c731, arvel's pin).
+                HfSource(
+                    "LocalAI-io/LocalVQE",
+                    "29ca38495cba9d6393a92a4dd890f28dd81f758d",
+                    "Apache-2.0",
+                    allow=["README.md", "localvqe-v1.4-aec-200K-f32.gguf"],
+                    note="LocalVQE v1.4-AEC by Richard Palethorpe "
+                    "(https://github.com/localai-org/LocalVQE), Apache-2.0, a streaming "
+                    "derivative of DeepVQE (Indenbom et al., Interspeech 2023).",
+                ),
+            ],
+        ),
+        Bundle(
             name="qwen3-embedding-0.6b",
             tag="3d106eab",
             used_by=["brainy (TEI)", "galley (TEI)"],

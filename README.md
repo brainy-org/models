@@ -13,7 +13,8 @@ model that its author deletes, moves or rewrites changes nothing for us.
 | `qwen3-embedding-0.6b` bundle: Qwen3-Embedding-0.6B and its ONNX export | `ghcr.io/brainy-org/models/qwen3-embedding-0.6b` | brainy's and Galley's TEI |
 | `parakeet-voice` bundle: WeSpeaker ResNet34-LM speaker encoder (GGUF), the "voice" component of mudler's `parakeet-bundle-small` written back as its standalone file, byte for byte | `ghcr.io/brainy-org/models/parakeet-voice` | logbook (final pass speakers) |
 | `libparakeet` bundle: parakeet.cpp's release builds | `ghcr.io/brainy-org/models/libparakeet` | logbook, arvel |
-| `qwen3-tts` bundle: Qwen3-TTS 12 Hz for qwentts.cpp (GGUF): CustomVoice talkers 0.6B and 1.7B (Q8_0), speech tokenizer (F32). Defined in `mirror.py`, not pushed yet: no entry in `models.lock.json` until it is | `ghcr.io/brainy-org/models/qwen3-tts` | arvel (TTS) |
+| `qwen3-tts` bundle: Qwen3-TTS 12 Hz for qwentts.cpp (GGUF): CustomVoice talkers 0.6B and 1.7B (Q8_0), speech tokenizer (F32) | `ghcr.io/brainy-org/models/qwen3-tts` | arvel (TTS) |
+| `localvqe` bundle: LocalVQE v1.4-AEC, a neural acoustic echo canceller (F32 GGUF, 200K parameters) | `ghcr.io/brainy-org/models/localvqe` | arvel (`--aec localvqe`) |
 | Images: Text Embeddings Inference (amd64, arm64), oras | `ghcr.io/brainy-org/mirror/*` | the Helm charts and compose files of brainy and Galley |
 | Build inputs: ffmpeg's source, libparakeet | `ghcr.io/brainy-org/vendor/brainy-worker-build` | brainy-worker's Dockerfile (`VENDOR_IMAGE`) |
 
@@ -61,7 +62,7 @@ Each consumer pins what it uses, copied from `models.lock.json`:
 | brainy, Galley (Helm) | `tei.bundle`, `tei.revision`, `tei.image`, `tei.puller.image` in `values.yaml` | an oras init container, with the `ghcr-pull` secret |
 | brainy, Galley (compose) | the `tei-model` service, `*_TEI_IMAGE` | the same, with `GHCR_USER`/`GHCR_TOKEN` from `.env` |
 | logbook | the files' sha256 in `crates/engine/src/mirror.rs` (`parakeet`, `parakeet-voice`, `libparakeet`) | logbook-server itself, by blob digest, on first start |
-| arvel | the files' sha256 in `scripts/fetch.sh` (`parakeet`, `libparakeet`, `qwen3-tts`) | `scripts/fetch.sh`, by blob digest with curl, into logbook's cache folders |
+| arvel | the files' sha256 in `scripts/fetch.sh` (`parakeet`, `libparakeet`, `qwen3-tts`, `localvqe`) | `scripts/fetch.sh`, by blob digest with curl, into logbook's cache folders |
 | the `ae` VM's TEI | brainy's `helm/README.md` | `oras pull` |
 
 ## Adding or changing a model
@@ -87,7 +88,10 @@ computer, with no token. Their licences allow it (each bundle's
 is made public only once its licences have been read for redistribution.
 `models/qwen3-tts` is public since 2026-10-30: arvel's
 `scripts/fetch.sh` pulls it with no token, and its licence (Apache-2.0,
-the GGUFs and the Qwen weights they come from) allows it. The others are private, readable with the organization's pull secret
+the GGUFs and the Qwen weights they come from) allows it.
+`models/localvqe` (Apache-2.0, which allows it) was pushed on 2026-10-31 for
+arvel's `scripts/fetch.sh`, which pulls it with no token too: it works only
+once the package is made public in its settings ("Change visibility"). The others are private, readable with the organization's pull secret
 (`ghcr-pull` in the clusters) or a token with `read:packages`. GitHub
 Actions read them with `GITHUB_TOKEN` only where a package grants the
 repository access (package settings, "Manage Actions access"): brainy-worker

@@ -223,6 +223,33 @@
         "arvel (macos-metal-arm64)"
       ]
     },
+    "localvqe": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "b365b3c59a20d701fe6480b153b04aee5b87dd4350996f617bcc8e35d52245de",
+          "size": 409
+        },
+        "README.md": {
+          "sha256": "60a634a8e37770f92b0819f59b6f9c0a5d0320b69335c99e3ade59b0dd84dfb6",
+          "size": 10956
+        },
+        "localvqe-v1.4-aec-200K-f32.gguf": {
+          "sha256": "b6e43138588a83bfe903ab5e143b4020b91c1e1629f5a575ac5855ff0003c731",
+          "size": 2924224
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/localvqe:29ca3849@sha256:466a84c5eddccbf05bdddd223798c856eb605a07f270ab6623fd1d0c0598f295",
+      "sources": [
+        {
+          "commit": "29ca38495cba9d6393a92a4dd890f28dd81f758d",
+          "licence": "Apache-2.0",
+          "repo": "LocalAI-io/LocalVQE"
+        }
+      ],
+      "used_by": [
+        "arvel (--aec localvqe)"
+      ]
+    },
     "parakeet": {
       "files": {
         "NOTICE.md": {
