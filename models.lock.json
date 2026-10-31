@@ -181,6 +181,39 @@
         "brainy-worker (docling's artifacts_path)"
       ]
     },
+    "liblocalvqe": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "60e379e941b9253e4aed580cc6e71426abb620283606f77a582327361f75bc5b",
+          "size": 493
+        },
+        "liblocalvqe.dylib": {
+          "sha256": "5b198633552219d5947364653efcb5770edb55f6caba869b778078f8cc0a9da6",
+          "size": 1676288
+        },
+        "localvqe-no-prealign.patch": {
+          "sha256": "e64e191a8356cd633fbde71fde983f4a8da4ceb550513eddb7d8733ecd0c90c7",
+          "size": 468
+        },
+        "localvqe_api.h": {
+          "sha256": "ef2871bde8cd8fe9aa8cd5c3b7d11cc72efb7bb1cc29f726522ace87ad490877",
+          "size": 11281
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/liblocalvqe:7f61cd05-macos-arm64@sha256:f44b2353c9b25124d0630f55bfb850cf9d63c682cf6021cd89764ea56882dd47",
+      "sources": [
+        {
+          "built_with": "-DLOCALVQE_BUILD_SHARED=ON -DGGML_METAL=OFF",
+          "commit": "7f61cd05095d42e56a135b303f5bb4d761da22b9",
+          "licence": "Apache-2.0 (LocalVQE), MIT (ggml)",
+          "patch": "patches/localvqe-no-prealign.patch",
+          "repo": "https://github.com/localai-org/LocalVQE.git"
+        }
+      ],
+      "used_by": [
+        "arvel (--aec localvqe)"
+      ]
+    },
     "libparakeet": {
       "files": {
         "NOTICE.md": {
@@ -221,6 +254,34 @@
       "used_by": [
         "logbook (server, CLI and desktop app)",
         "arvel (macos-metal-arm64)"
+      ]
+    },
+    "libqwen": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "9f260e3d76d308569650347351143466f18d82dfe99d9ecd833b38584fbc7f2b",
+          "size": 281
+        },
+        "libqwen.dylib": {
+          "sha256": "8e2106787afbb3597648dab1656206fba2232de62f79932e02b83b2e03e15719",
+          "size": 7383088
+        },
+        "qwen.h": {
+          "sha256": "08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+          "size": 19547
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libqwen:5916bf7c-macos-arm64@sha256:1892815e20d327e1339ce9d85a908e2ae08631dc62bf310b7055e977ccda4f45",
+      "sources": [
+        {
+          "built_with": "-DQWEN_SHARED=ON -DGGML_METAL=ON -DGGML_METAL_EMBED_LIBRARY=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16",
+          "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+          "licence": "MIT (qwentts.cpp, ggml)",
+          "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
       ]
     },
     "localvqe": {

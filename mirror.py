@@ -71,6 +71,8 @@ class Bundle:
     sources: list[HfSource] = field(default_factory=list)
     extra: Callable[[Path], list[dict[str, str]]] | None = None
     description: str = ""
+    # For a library built here: what it is built from, recorded in the lock.
+    built_from: NativeBuild | None = None
 
 
 def _rapidocr(directory: Path) -> list[dict[str, str]]:
@@ -246,6 +248,148 @@ def _extract_component(bundle: Path, component: str, out: Path) -> None:
     out.write_bytes(bytes(header) + body)
 
 
+@dataclass(frozen=True)
+class NativeBuild:
+    """A C/C++ library built from a commit with cmake, for a consumer that
+    downloads a library rather than builds one (arvel). The source is the
+    commit (and a patch kept in patches/); the library is built here, so a
+    rebuild elsewhere gives other bytes and a new digest: a built file
+    already in .work/ is reused, so pushing the bundle again keeps it."""
+
+    repo: str
+    commit: str
+    licence: str
+    # The library as built (under the build folder) and its name in the bundle.
+    built: str
+    library: str
+    # The C header the consumer declares its FFI from, with its sha256: the
+    # bundle carries it, and the build stops if the commit's differs.
+    header: str
+    header_sha256: str
+    cmake_args: list[str]
+    target: str
+    # The folder with the CMakeLists.txt, inside the repository.
+    source: str = ""
+    patch: str | None = None
+
+
+def _native(spec: NativeBuild, name: str) -> Callable[[Path], list[dict[str, str]]]:
+    """The library of `spec`, built on this machine (macOS arm64 only: the
+    one platform its consumer runs on), with its header and patch beside it."""
+
+    def fetch(directory: Path) -> list[dict[str, str]]:
+        import platform
+
+        if (platform.system(), platform.machine()) != ("Darwin", "arm64"):
+            sys.exit(f"{name}: built on macOS arm64 only")
+        library = directory / spec.library
+        header = directory / Path(spec.header).name
+        notes = [
+            {"url": f"{spec.repo} at {spec.commit}", "path": spec.library, "licence": spec.licence}
+        ]
+        if spec.patch:
+            shutil.copy(ROOT / spec.patch, directory / Path(spec.patch).name)
+            notes.append(
+                {
+                    "url": f"{SOURCE}/blob/main/{spec.patch}",
+                    "path": Path(spec.patch).name,
+                    "licence": "applied to the source before the build",
+                }
+            )
+        if library.exists() and header.exists():
+            return notes
+        src = WORK / "src" / name
+        if not (src / ".git").exists():
+            subprocess.run(["git", "clone", spec.repo, str(src)], check=True)
+        git = ["git", "-C", str(src)]
+        subprocess.run([*git, "fetch", "--depth", "1", "origin", spec.commit], check=False)
+        subprocess.run([*git, "checkout", "-q", "--force", spec.commit], check=True)
+        subprocess.run(
+            [*git, "submodule", "update", "--init", "--recursive", "--depth", "1"], check=True
+        )
+        if _sha256(src / spec.header) != spec.header_sha256:
+            sys.exit(f"{name}: {spec.header} at {spec.commit} is not the one pinned")
+        if spec.patch:
+            patch = str(ROOT / spec.patch)
+            applied = subprocess.run(
+                [*git, "apply", "--reverse", "--check", patch],
+                check=False,
+                capture_output=True,
+            )
+            if applied.returncode != 0:
+                subprocess.run([*git, "apply", patch], check=True)
+        source = src / spec.source
+        build_dir = source / "build"
+        subprocess.run(
+            [
+                "cmake",
+                "-S",
+                str(source),
+                "-B",
+                str(build_dir),
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release",
+                *spec.cmake_args,
+            ],
+            check=True,
+        )
+        subprocess.run(["cmake", "--build", str(build_dir), "--target", spec.target], check=True)
+        # The real file, not the versioned symlinks that point at it.
+        shutil.copy((build_dir / spec.built).resolve(), library)
+        shutil.copy(src / spec.header, header)
+        return notes
+
+    return fetch
+
+
+# The libraries arvel loads with dlopen. arvel's FFI follows each header
+# (src/qwen.rs, src/localvqe.rs): moving a commit means diffing the header.
+LIBQWEN = NativeBuild(
+    repo="https://github.com/ServeurpersoCom/qwentts.cpp",
+    commit="5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+    licence="MIT (qwentts.cpp, ggml)",
+    built="libqwen.dylib",
+    library="libqwen.dylib",
+    header="src/qwen.h",
+    header_sha256="08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+    # Metal, with ggml linked in. Not -mcpu=native (ggml's default): the
+    # build machine's CPU features would crash it on an older Mac. Every
+    # Apple silicon chip has armv8.2-a with dotprod and fp16; the talker
+    # runs on the GPU anyway.
+    cmake_args=[
+        "-DQWEN_SHARED=ON",
+        "-DGGML_METAL=ON",
+        "-DGGML_METAL_EMBED_LIBRARY=ON",
+        "-DBUILD_SHARED_LIBS=OFF",
+        "-DGGML_NATIVE=OFF",
+        "-DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16",
+    ],
+    target="qwen",
+)
+LIBLOCALVQE = NativeBuild(
+    repo="https://github.com/localai-org/LocalVQE.git",
+    commit="7f61cd05095d42e56a135b303f5bb4d761da22b9",
+    licence="Apache-2.0 (LocalVQE), MIT (ggml)",
+    built="liblocalvqe.dylib",
+    library="liblocalvqe.dylib",
+    header="ggml/localvqe_api.h",
+    header_sha256="ef2871bde8cd8fe9aa8cd5c3b7d11cc72efb7bb1cc29f726522ace87ad490877",
+    # The CPU only (parakeet and qwen have the GPU); LocalVQE's CMakeLists
+    # turns GGML_NATIVE off on arm64 itself. The configure step applies
+    # upstream's own ggml patch to its submodule; only the library is built
+    # (the bench targets download test files).
+    cmake_args=["-DLOCALVQE_BUILD_SHARED=ON", "-DGGML_METAL=OFF"],
+    target="localvqe_shared",
+    source="ggml",
+    # Its own delay search (GCC-PHAT) off by default: arvel aligns the far
+    # end itself, and the search once locked on a wrong delay for a whole
+    # session (arvel's docs/decisions/2026-10-31-localvqe.md). The C API is
+    # unchanged.
+    patch="patches/localvqe-no-prealign.patch",
+)
+
+
 # libparakeet v0.6.1, the builds brainy-worker's image and logbook load; the
 # sha256 are the release's own (GitHub's asset digests, 2026-10-24).
 PARAKEET_RELEASE = {
@@ -394,6 +538,24 @@ BUNDLES: dict[str, Bundle] = {
             ],
         ),
         Bundle(
+            name="libqwen",
+            tag="5916bf7c-macos-arm64",
+            used_by=["arvel (TTS)"],
+            description="libqwen, qwentts.cpp's C API, built for macOS arm64 with Metal "
+            "(the dylib and qwen.h)",
+            extra=_native(LIBQWEN, "libqwen"),
+            built_from=LIBQWEN,
+        ),
+        Bundle(
+            name="liblocalvqe",
+            tag="7f61cd05-macos-arm64",
+            used_by=["arvel (--aec localvqe)"],
+            description="liblocalvqe, LocalVQE's C API, built for macOS arm64 on the CPU "
+            "with arvel's patch (the dylib, localvqe_api.h and the patch)",
+            extra=_native(LIBLOCALVQE, "liblocalvqe"),
+            built_from=LIBLOCALVQE,
+        ),
+        Bundle(
             name="qwen3-embedding-0.6b",
             tag="3d106eab",
             used_by=["brainy (TEI)", "galley (TEI)"],
@@ -537,7 +699,20 @@ def push(bundle: Bundle, directory: Path) -> dict[str, object]:
         "sources": [
             {"repo": source.repo, "commit": source.commit, "licence": source.licence}
             for source in bundle.sources
-        ],
+        ]
+        + (
+            [
+                {
+                    "repo": bundle.built_from.repo,
+                    "commit": bundle.built_from.commit,
+                    "licence": bundle.built_from.licence,
+                    "built_with": " ".join(bundle.built_from.cmake_args),
+                    **({"patch": bundle.built_from.patch} if bundle.built_from.patch else {}),
+                }
+            ]
+            if bundle.built_from
+            else []
+        ),
         "files": files,
     }
 

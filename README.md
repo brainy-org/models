@@ -15,6 +15,8 @@ model that its author deletes, moves or rewrites changes nothing for us.
 | `libparakeet` bundle: parakeet.cpp's release builds | `ghcr.io/brainy-org/models/libparakeet` | logbook, arvel |
 | `qwen3-tts` bundle: Qwen3-TTS 12 Hz for qwentts.cpp (GGUF): CustomVoice talkers 0.6B and 1.7B (Q8_0), speech tokenizer (F32) | `ghcr.io/brainy-org/models/qwen3-tts` | arvel (TTS) |
 | `localvqe` bundle: LocalVQE v1.4-AEC, a neural acoustic echo canceller (F32 GGUF, 200K parameters) | `ghcr.io/brainy-org/models/localvqe` | arvel (`--aec localvqe`) |
+| `libqwen` bundle: qwentts.cpp's C API built here for macOS arm64 with Metal, and its `qwen.h` | `ghcr.io/brainy-org/models/libqwen` | arvel (TTS) |
+| `liblocalvqe` bundle: LocalVQE's C API built here for macOS arm64 (CPU) with `patches/localvqe-no-prealign.patch`, its `localvqe_api.h` and the patch | `ghcr.io/brainy-org/models/liblocalvqe` | arvel (`--aec localvqe`) |
 | Images: Text Embeddings Inference (amd64, arm64), oras | `ghcr.io/brainy-org/mirror/*` | the Helm charts and compose files of brainy and Galley |
 | Build inputs: ffmpeg's source, libparakeet | `ghcr.io/brainy-org/vendor/brainy-worker-build` | brainy-worker's Dockerfile (`VENDOR_IMAGE`) |
 
@@ -35,6 +37,13 @@ digests), writes the `NOTICE.md`, and pushes it with oras. The `docling`
 bundle is laid out as docling's `artifacts_path` expects, by the same
 docling and rapidocr versions as brainy-worker's `uv.lock` (the script's
 inline dependencies): their resolvers decide which files a language needs.
+
+`libqwen` and `liblocalvqe` are the exception to "fetch, don't build": no
+upstream publishes the macOS libraries arvel loads, so `mirror.py` builds
+them (`NativeBuild`: a commit, cmake flags, a patch from `patches/`, the
+header's sha256 checked first) on a Mac with Apple silicon, cmake and ninja.
+The build is not reproducible bit for bit: a build already in `.work/` is
+reused, and the lock records what it was built from.
 
 ```bash
 gh auth refresh -s write:packages
@@ -62,7 +71,7 @@ Each consumer pins what it uses, copied from `models.lock.json`:
 | brainy, Galley (Helm) | `tei.bundle`, `tei.revision`, `tei.image`, `tei.puller.image` in `values.yaml` | an oras init container, with the `ghcr-pull` secret |
 | brainy, Galley (compose) | the `tei-model` service, `*_TEI_IMAGE` | the same, with `GHCR_USER`/`GHCR_TOKEN` from `.env` |
 | logbook | the files' sha256 in `crates/engine/src/mirror.rs` (`parakeet`, `parakeet-voice`, `libparakeet`) | logbook-server itself, by blob digest, on first start |
-| arvel | the files' sha256 in `scripts/fetch.sh` (`parakeet`, `libparakeet`, `qwen3-tts`, `localvqe`) | `scripts/fetch.sh`, by blob digest with curl, into logbook's cache folders |
+| arvel | manifest digests and files' sha256 in `src/mirror.rs` (`parakeet`, `libparakeet`, `qwen3-tts`, `localvqe`, `libqwen`, `liblocalvqe`) | the `arvel` binary itself, by blob digest, on first start, into `~/.cache/brainy-org` (logbook's folders for what both load) |
 | the `ae` VM's TEI | brainy's `helm/README.md` | `oras pull` |
 
 ## Adding or changing a model
@@ -86,12 +95,14 @@ public since 2026-10-26: logbook's CLI fetches them on every user's
 computer, with no token. Their licences allow it (each bundle's
 `NOTICE.md`); a public package cannot be made private again, so a bundle
 is made public only once its licences have been read for redistribution.
-`models/qwen3-tts` is public since 2026-10-30: arvel's
-`scripts/fetch.sh` pulls it with no token, and its licence (Apache-2.0,
-the GGUFs and the Qwen weights they come from) allows it.
-`models/localvqe` (Apache-2.0, which allows it) was pushed on 2026-10-31 for
-arvel's `scripts/fetch.sh`, which pulls it with no token too: it works only
-once the package is made public in its settings ("Change visibility"). The others are private, readable with the organization's pull secret
+`models/qwen3-tts` is public since 2026-10-30: the arvel binary pulls it
+with no token, and its licence (Apache-2.0, the GGUFs and the Qwen weights
+they come from) allows it. `models/localvqe` (Apache-2.0, which allows it)
+is public since 2026-10-31, for arvel too. `models/libqwen` (MIT) and
+`models/liblocalvqe` (Apache-2.0 and MIT) were pushed on 2026-10-31 for the
+arvel binary, which pulls them with no token: it works only once each
+package is made public in its settings ("Change visibility"); until then
+`ARVEL_GHCR_TOKEN` (a token with `read:packages`) lets arvel pull them. The others are private, readable with the organization's pull secret
 (`ghcr-pull` in the clusters) or a token with `read:packages`. GitHub
 Actions read them with `GITHUB_TOKEN` only where a package grants the
 repository access (package settings, "Manage Actions access"): brainy-worker

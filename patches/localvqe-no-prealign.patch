@@ -1,0 +1,13 @@
+diff --git a/ggml/daf_frontend.h b/ggml/daf_frontend.h
+index f86c597..e3c6fdd 100644
+--- a/ggml/daf_frontend.h
++++ b/ggml/daf_frontend.h
+@@ -17,7 +17,7 @@
+ 
+ struct daf_frontend {
+     bool loaded = false;
+-    bool enable_prealign = true;  // off => cur_shift stays 0 (parity tests)
++    bool enable_prealign = false; // arvel: its own reference FIFO aligns the far end
+ 
+     // ---- filter constants ----
+     static constexpr int M = 128;          // block (8 ms)
