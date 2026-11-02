@@ -214,6 +214,184 @@
         "arvel (--aec localvqe)"
       ]
     },
+    "liblocalvqe-linux-cpu-arm64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "97054f778252a2d5dd1c89d348e18c114dbff2f2e10f510c86c56d8d270113ad",
+          "size": 529
+        },
+        "liblocalvqe.so": {
+          "sha256": "cb4c3cbc3e89bd4b4351bcabbf5444735e3ec208c5c63bada6ade6f10e013f17",
+          "size": 3213640
+        },
+        "localvqe-no-prealign.patch": {
+          "sha256": "e64e191a8356cd633fbde71fde983f4a8da4ceb550513eddb7d8733ecd0c90c7",
+          "size": 468
+        },
+        "localvqe_api.h": {
+          "sha256": "ef2871bde8cd8fe9aa8cd5c3b7d11cc72efb7bb1cc29f726522ace87ad490877",
+          "size": 11281
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/liblocalvqe:7f61cd05-linux-cpu-arm64@sha256:c7868f0047360c3598cafcf0f441096f692634975642a2e8044e86f7805c9f2f",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DLOCALVQE_BUILD_SHARED=ON -DGGML_OPENMP=OFF -DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL'",
+            "commit": "9b2e4074fdd8010d5a1959cde6998ecf5135e744",
+            "host": "Linux-6.8.0-1070-azure-aarch64-with-glibc2.35",
+            "run": "https://github.com/brainy-org/models/actions/runs/41401584038",
+            "runner": "ubuntu22-arm64 20261026.173.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 24,
+              "glibc": "2.34",
+              "load": "ok",
+              "needs": [
+                "libm.so.6",
+                "libc.so.6",
+                "ld-linux-aarch64.so.1"
+              ],
+              "rpath": []
+            },
+            "toolchain": {
+              "cxx": "GNU 11.4.0"
+            }
+          },
+          "built_with": "-DLOCALVQE_BUILD_SHARED=ON -DGGML_OPENMP=OFF -DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL'",
+          "commit": "7f61cd05095d42e56a135b303f5bb4d761da22b9",
+          "licence": "Apache-2.0 (LocalVQE), MIT (ggml)",
+          "patches": [
+            "patches/localvqe-no-prealign.patch"
+          ],
+          "repo": "https://github.com/localai-org/LocalVQE.git"
+        }
+      ],
+      "used_by": [
+        "arvel (--aec localvqe)"
+      ]
+    },
+    "liblocalvqe-linux-cpu-x64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "fbea9d5987f63cf8c3e3e2b4157319c0e854edb9ef6dfc02a1299c78a89f0f74",
+          "size": 708
+        },
+        "liblocalvqe.so": {
+          "sha256": "1f04a4a3087cf1bf779d26d2edc8660aef361bb94a34b7c4ed2c26e8ae3dbb6d",
+          "size": 3401632
+        },
+        "localvqe-no-prealign.patch": {
+          "sha256": "e64e191a8356cd633fbde71fde983f4a8da4ceb550513eddb7d8733ecd0c90c7",
+          "size": 468
+        },
+        "localvqe-x86-static.patch": {
+          "sha256": "ad9989bebf42ded18835d4751430dc76bae02553589c96d8b3b91369c1ca5273",
+          "size": 1288
+        },
+        "localvqe_api.h": {
+          "sha256": "ef2871bde8cd8fe9aa8cd5c3b7d11cc72efb7bb1cc29f726522ace87ad490877",
+          "size": 11281
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/liblocalvqe:7f61cd05-linux-cpu-x64@sha256:0b4ac4310162624a44c9fb7597706b9ce71171e5486b57772dbf52871befb9dc",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DLOCALVQE_BUILD_SHARED=ON -DLOCALVQE_X86_STATIC=ON -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL'",
+            "commit": "9b2e4074fdd8010d5a1959cde6998ecf5135e744",
+            "host": "Linux-6.8.0-1070-azure-x86_64-with-glibc2.35",
+            "run": "https://github.com/brainy-org/models/actions/runs/41401584038",
+            "runner": "ubuntu22 20261026.341.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 24,
+              "glibc": "2.34",
+              "load": "ok",
+              "needs": [
+                "libm.so.6",
+                "libc.so.6",
+                "ld-linux-x86-64.so.2"
+              ],
+              "rpath": []
+            },
+            "toolchain": {
+              "cxx": "GNU 11.4.0"
+            }
+          },
+          "built_with": "-DLOCALVQE_BUILD_SHARED=ON -DLOCALVQE_X86_STATIC=ON -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL'",
+          "commit": "7f61cd05095d42e56a135b303f5bb4d761da22b9",
+          "licence": "Apache-2.0 (LocalVQE), MIT (ggml)",
+          "patches": [
+            "patches/localvqe-no-prealign.patch",
+            "patches/localvqe-x86-static.patch"
+          ],
+          "repo": "https://github.com/localai-org/LocalVQE.git"
+        }
+      ],
+      "used_by": [
+        "arvel (--aec localvqe)"
+      ]
+    },
+    "liblocalvqe-windows-cpu-x64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "af3f54d8bb0df84347c6ef5035cf6aa435440ed0e4ad46b135f292b27bc5ec74",
+          "size": 708
+        },
+        "localvqe-no-prealign.patch": {
+          "sha256": "e64e191a8356cd633fbde71fde983f4a8da4ceb550513eddb7d8733ecd0c90c7",
+          "size": 468
+        },
+        "localvqe-x86-static.patch": {
+          "sha256": "ad9989bebf42ded18835d4751430dc76bae02553589c96d8b3b91369c1ca5273",
+          "size": 1288
+        },
+        "localvqe.dll": {
+          "sha256": "e38e19d4283e90db4615e619e8ceaedef3ce09348871c768beeb224021564930",
+          "size": 1490432
+        },
+        "localvqe_api.h": {
+          "sha256": "ef2871bde8cd8fe9aa8cd5c3b7d11cc72efb7bb1cc29f726522ace87ad490877",
+          "size": 11281
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/liblocalvqe:7f61cd05-windows-cpu-x64@sha256:fb58e7f5234f7ed38df077dfcc16dd805b77ac3f61e6d94828614de2ab053eb0",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DLOCALVQE_BUILD_SHARED=ON -DLOCALVQE_X86_STATIC=ON -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",
+            "commit": "b5afc30e9c5944d173edc89e40685f15e139e3e7",
+            "host": "Windows-2022Server-10.0.20348-SP0",
+            "run": "https://github.com/brainy-org/models/actions/runs/41400389918",
+            "runner": "win22 20261026.347.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 24,
+              "load": "ok",
+              "needs": [
+                "ADVAPI32.dll",
+                "KERNEL32.dll"
+              ]
+            },
+            "toolchain": {
+              "cxx": "MSVC 19.44.35229.0"
+            }
+          },
+          "built_with": "-DLOCALVQE_BUILD_SHARED=ON -DLOCALVQE_X86_STATIC=ON -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",
+          "commit": "7f61cd05095d42e56a135b303f5bb4d761da22b9",
+          "licence": "Apache-2.0 (LocalVQE), MIT (ggml)",
+          "patches": [
+            "patches/localvqe-no-prealign.patch",
+            "patches/localvqe-x86-static.patch"
+          ],
+          "repo": "https://github.com/localai-org/LocalVQE.git"
+        }
+      ],
+      "used_by": [
+        "arvel (--aec localvqe)"
+      ]
+    },
     "libparakeet": {
       "files": {
         "NOTICE.md": {
@@ -275,6 +453,391 @@
       "sources": [
         {
           "built_with": "-DQWEN_SHARED=ON -DGGML_METAL=ON -DGGML_METAL_EMBED_LIBRARY=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16",
+          "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+          "licence": "MIT (qwentts.cpp, ggml)",
+          "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
+      ]
+    },
+    "libqwen-linux-cpu-arm64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "e60cb73fb00544346a21d5c2754b5294040faf139af464362b66fa3c14b5f335",
+          "size": 285
+        },
+        "libqwen.so": {
+          "sha256": "3964e62828f401493177f046abc01d200e594ba09fd407892eab15dfd396f1bf",
+          "size": 3558872
+        },
+        "qwen.h": {
+          "sha256": "08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+          "size": 19547
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libqwen:5916bf7c-linux-cpu-arm64@sha256:31ca141174da99abf5bf6c13034eddbf35b37f0dff6f3688ec4dbb558550a967",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL'",
+            "commit": "9b2e4074fdd8010d5a1959cde6998ecf5135e744",
+            "host": "Linux-6.8.0-1070-azure-aarch64-with-glibc2.35",
+            "run": "https://github.com/brainy-org/models/actions/runs/41401584038",
+            "runner": "ubuntu22-arm64 20261026.173.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 18,
+              "glibc": "2.34",
+              "load": "ok",
+              "needs": [
+                "libm.so.6",
+                "libc.so.6",
+                "ld-linux-aarch64.so.1"
+              ],
+              "probe": "qt_version() = 5916bf7 (2026-10-16)",
+              "rpath": []
+            },
+            "toolchain": {
+              "cxx": "GNU 11.4.0"
+            }
+          },
+          "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL'",
+          "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+          "licence": "MIT (qwentts.cpp, ggml)",
+          "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
+      ]
+    },
+    "libqwen-linux-cpu-x64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "a723938ed672649b9c6185aeebb59778657c061c38b7ddb0ff7d41de01ae9606",
+          "size": 281
+        },
+        "libqwen.so": {
+          "sha256": "120686ec436c2e8d6902d860cfe57bcc352fd2fe4676716d399caf5d08ef3b22",
+          "size": 3966808
+        },
+        "qwen.h": {
+          "sha256": "08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+          "size": 19547
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libqwen:5916bf7c-linux-cpu-x64@sha256:02ea23d96236ed7678c7c54408f9c774c3cbc6a2ed8916f7a81ea8755a367287",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL'",
+            "commit": "9b2e4074fdd8010d5a1959cde6998ecf5135e744",
+            "host": "Linux-6.8.0-1070-azure-x86_64-with-glibc2.35",
+            "run": "https://github.com/brainy-org/models/actions/runs/41401584038",
+            "runner": "ubuntu22 20261026.341.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 18,
+              "glibc": "2.34",
+              "load": "ok",
+              "needs": [
+                "libm.so.6",
+                "libc.so.6",
+                "ld-linux-x86-64.so.2"
+              ],
+              "probe": "qt_version() = 5916bf7 (2026-10-16)",
+              "rpath": []
+            },
+            "toolchain": {
+              "cxx": "GNU 11.4.0"
+            }
+          },
+          "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL'",
+          "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+          "licence": "MIT (qwentts.cpp, ggml)",
+          "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
+      ]
+    },
+    "libqwen-linux-cuda-x64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "ac9c1ac745600073af5f7ae88549fc825cf7f2b2aab0e715bb08b238c4681867",
+          "size": 860
+        },
+        "libcublas.so.12": {
+          "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048",
+          "size": 105140976
+        },
+        "libcublasLt.so.12": {
+          "sha256": "96ddf4891ca4f4ed1475966783a9185df2abd64a81c3cc713b96d036696fc541",
+          "size": 749205904
+        },
+        "libcudart.so.12": {
+          "sha256": "256e6409e4f06f618e1fb53d4844a6b81cdded1013afa8ade40c22f99eb133b7",
+          "size": 741088
+        },
+        "libqwen.so": {
+          "sha256": "76abca51c03696c8cc7eea677201d9ab719ec9cb9be601b23450b2890c5b946c",
+          "size": 137850648
+        },
+        "qwen.h": {
+          "sha256": "08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+          "size": 19547
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libqwen:5916bf7c-linux-cuda-x64@sha256:53c54dfd23e59a36b617144eb24b88a72a49c8529606477aeb8c3467d9c30798",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL' -DGGML_CUDA=ON '-DCMAKE_CUDA_ARCHITECTURES=75-real;80-real;86-real;89;120a-real' '-DCMAKE_INSTALL_RPATH=$ORIGIN'",
+            "commit": "9b2e4074fdd8010d5a1959cde6998ecf5135e744",
+            "host": "Linux-6.8.0-1070-azure-x86_64-with-glibc2.35",
+            "run": "https://github.com/brainy-org/models/actions/runs/41401584038",
+            "runner": "ubuntu22 20261026.341.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 18,
+              "glibc": "2.34",
+              "load": "ok",
+              "needs": [
+                "libcudart.so.12",
+                "libcublas.so.12",
+                "libcuda.so.1",
+                "libm.so.6",
+                "libc.so.6",
+                "ld-linux-x86-64.so.2"
+              ],
+              "probe": "qt_version() = 5916bf7 (2026-10-16)",
+              "rpath": [
+                "$ORIGIN"
+              ]
+            },
+            "toolchain": {
+              "cuda": "NVIDIA 12.9.86",
+              "cxx": "GNU 11.4.0"
+            }
+          },
+          "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL' -DGGML_CUDA=ON '-DCMAKE_CUDA_ARCHITECTURES=75-real;80-real;86-real;89;120a-real' '-DCMAKE_INSTALL_RPATH=$ORIGIN'",
+          "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+          "licence": "MIT (qwentts.cpp, ggml)",
+          "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
+      ]
+    },
+    "libqwen-linux-vulkan-x64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "3273ecf727eb72d5ae4692ba450bb8bc53b5fdc6633e996fb60c6f22b6d66b36",
+          "size": 287
+        },
+        "libqwen.so": {
+          "sha256": "0902eaef0616165d93c4869552188dec05d4ea6d1bd6213559fda835a947032b",
+          "size": 44615368
+        },
+        "qwen.h": {
+          "sha256": "08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+          "size": 19547
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libqwen:5916bf7c-linux-vulkan-x64@sha256:516511cc20ec0bc58c0f26e5182a1c4266ef524d18b1ff14ce8380f796b69305",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL' -DGGML_VULKAN=ON",
+            "commit": "9b2e4074fdd8010d5a1959cde6998ecf5135e744",
+            "host": "Linux-6.8.0-1070-azure-x86_64-with-glibc2.35",
+            "run": "https://github.com/brainy-org/models/actions/runs/41401584038",
+            "runner": "ubuntu22 20261026.341.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 18,
+              "glibc": "2.34",
+              "load": "ok",
+              "needs": [
+                "libvulkan.so.1",
+                "libm.so.6",
+                "libc.so.6",
+                "ld-linux-x86-64.so.2"
+              ],
+              "probe": "qt_version() = 5916bf7 (2026-10-16)",
+              "rpath": []
+            },
+            "toolchain": {
+              "cxx": "GNU 11.4.0",
+              "vulkan_sdk": "/home/runner/work/_temp/1.4.328.1/x86_64"
+            }
+          },
+          "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON '-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL' -DGGML_VULKAN=ON",
+          "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+          "licence": "MIT (qwentts.cpp, ggml)",
+          "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
+      ]
+    },
+    "libqwen-windows-cpu-x64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "d82339bb3878289b15e6d57226b0c2af29c34f72c7f5d5b9d6bb8366e4eca4be",
+          "size": 281
+        },
+        "qwen.dll": {
+          "sha256": "607406e48703d19090aaf030cd058d98a2d45048c8c1fd42ac31f809c58f76cf",
+          "size": 1882624
+        },
+        "qwen.h": {
+          "sha256": "08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+          "size": 19547
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libqwen:5916bf7c-windows-cpu-x64@sha256:2386da9c9d36505b8692d564b3fe18f788d3ba2519f9f3db0c58174a27884e39",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",
+            "commit": "46f0608dd146bad3319ddfcd33755c14a0fc596e",
+            "host": "Windows-2022Server-10.0.20348-SP0",
+            "run": "https://github.com/brainy-org/models/actions/runs/41400251914",
+            "runner": "win22 20261026.347.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 18,
+              "load": "ok",
+              "needs": [
+                "ADVAPI32.dll",
+                "KERNEL32.dll"
+              ],
+              "probe": "qt_version() = 5916bf7 (2026-10-16)"
+            },
+            "toolchain": {
+              "cxx": "MSVC 19.44.35229.0"
+            }
+          },
+          "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",
+          "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+          "licence": "MIT (qwentts.cpp, ggml)",
+          "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
+      ]
+    },
+    "libqwen-windows-cuda-x64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "01d145c52cb39ed7476f16ef88d6459902e0b01e8609e2dd5aa2427e0ec90bd2",
+          "size": 860
+        },
+        "cublas64_12.dll": {
+          "sha256": "90052a83efd1b57a8e3616a6590b335855f81b814a4f16eecb7b5bf6d1b1d4eb",
+          "size": 102518272
+        },
+        "cublasLt64_12.dll": {
+          "sha256": "c3a05ea244c937314afec09f87b91f814c7e27977681f6c67eb51bb06ced3a4a",
+          "size": 668669952
+        },
+        "cudart64_12.dll": {
+          "sha256": "760c38928bbe5759f7b31ed6692599eb7ec83cedd5702e84c2b72028a89837e1",
+          "size": 583680
+        },
+        "qwen.dll": {
+          "sha256": "3791750295ec87a5295b3fb0bda1adf03881c6dd6c18aa348e02273bdd8fed68",
+          "size": 125906432
+        },
+        "qwen.h": {
+          "sha256": "08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+          "size": 19547
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libqwen:5916bf7c-windows-cuda-x64@sha256:6c4d17f176015cdc3d9354930cbc8f19d07f9078e5f1a354e598622f788c0da2",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DGGML_CUDA=ON '-DCMAKE_CUDA_ARCHITECTURES=75-real;80-real;86-real;89;120a-real'",
+            "commit": "46f0608dd146bad3319ddfcd33755c14a0fc596e",
+            "host": "Windows-2022Server-10.0.20348-SP0",
+            "run": "https://github.com/brainy-org/models/actions/runs/41400251914",
+            "runner": "win22 20261026.347.1",
+            "smoke": {
+              "check": "symbol table (the library cannot load here), every function exported",
+              "functions": 18,
+              "load": "failed: Could not find module 'D:\\a\\models\\models\\.work\\libqwen-windows-cuda-x64\\qwen.dll' (or one of its dependencies). Try using the full path with constructor syntax.",
+              "needs": [
+                "ADVAPI32.dll",
+                "KERNEL32.dll",
+                "cublas64_12.dll",
+                "cudart64_12.dll",
+                "nvcuda.dll"
+              ]
+            },
+            "toolchain": {
+              "cuda": "NVIDIA 12.9.86",
+              "cxx": "MSVC 19.44.35229.0"
+            }
+          },
+          "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DGGML_CUDA=ON '-DCMAKE_CUDA_ARCHITECTURES=75-real;80-real;86-real;89;120a-real'",
+          "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
+          "licence": "MIT (qwentts.cpp, ggml)",
+          "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
+        }
+      ],
+      "used_by": [
+        "arvel (TTS)"
+      ]
+    },
+    "libqwen-windows-vulkan-x64": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "2b613b98c3a5e8d7a6f0a6f3ffe573149b0190ebe96e2ced3fb003c490d6c389",
+          "size": 287
+        },
+        "qwen.dll": {
+          "sha256": "1e305fd53caf70bd70d6dd0fac1a4bf7e477eba8524b2c4237735bab1240e719",
+          "size": 41984000
+        },
+        "qwen.h": {
+          "sha256": "08841d6299809754b2f6e4dbfce0bd1035ea351fcc51a0b437aeb39b48d79a97",
+          "size": 19547
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/libqwen:5916bf7c-windows-vulkan-x64@sha256:5625dc9aa30d66ae075987e8222fe17f53e769ba23e3867b952e5eef9c8be7d7",
+      "sources": [
+        {
+          "built_on": {
+            "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DGGML_VULKAN=ON",
+            "commit": "46f0608dd146bad3319ddfcd33755c14a0fc596e",
+            "host": "Windows-2022Server-10.0.20348-SP0",
+            "run": "https://github.com/brainy-org/models/actions/runs/41400251914",
+            "runner": "win22 20261026.347.1",
+            "smoke": {
+              "check": "loaded, every function resolved",
+              "functions": 18,
+              "load": "ok",
+              "needs": [
+                "ADVAPI32.dll",
+                "KERNEL32.dll",
+                "vulkan-1.dll"
+              ],
+              "probe": "qt_version() = 5916bf7 (2026-10-16)"
+            },
+            "toolchain": {
+              "cxx": "MSVC 19.44.35229.0",
+              "vulkan_sdk": "C:/VulkanSDK/1.4.328.1"
+            }
+          },
+          "built_with": "-DQWEN_SHARED=ON -DBUILD_SHARED_LIBS=OFF -DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DGGML_VULKAN=ON",
           "commit": "5916bf7c79dbb4e66fc059cdc507a79a23a28bb4",
           "licence": "MIT (qwentts.cpp, ggml)",
           "repo": "https://github.com/ServeurpersoCom/qwentts.cpp"
