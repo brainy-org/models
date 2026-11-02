@@ -322,10 +322,13 @@ X64 = ("-DGGML_AVX=ON", "-DGGML_AVX2=ON", "-DGGML_FMA=ON", "-DGGML_F16C=ON", "-D
 ARM64 = ("-DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16",)
 # ggml's own thread pool, as on the Mac: no libgomp or vcomp140.dll to ship.
 PORTABLE = ("-DGGML_NATIVE=OFF", "-DGGML_OPENMP=OFF")
-# Linux: libstdc++ linked in, and the static archives' symbols (ggml's)
-# kept local, so a process that loads another ggml (libparakeet) does not
-# bind this library's calls to it.
-LINUX = ("-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL",)
+# Linux: ggml's archives built for a shared library, libstdc++ linked in,
+# and the archives' symbols (ggml's) kept local, so a process that loads
+# another ggml (libparakeet) does not bind this library's calls to it.
+LINUX = (
+    "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+    "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL",
+)
 # Windows: the C runtime linked in (/MT), no VC++ redistributable needed.
 WINDOWS = ("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",)
 CUDA = ("-DGGML_CUDA=ON", f"-DCMAKE_CUDA_ARCHITECTURES={CUDA_ARCHITECTURES}")

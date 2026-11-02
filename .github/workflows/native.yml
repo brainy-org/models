@@ -156,6 +156,8 @@ jobs:
           if [ "$RUNNER_OS" = Windows ]; then
             cuda="$(cygpath -w "$cuda")"
           else
+            # Where nvcc and FindCUDAToolkit look (the archives have lib/).
+            ln -s lib "$cuda/lib64"
             # The driver's library is not on the runner: its stub stands in
             # for the smoke check's load (the same soname, libcuda.so.1).
             echo "MIRROR_SMOKE_PRELOAD=$cuda/lib/stubs/libcuda.so" >> "$GITHUB_ENV"

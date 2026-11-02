@@ -1,0 +1,3 @@
+# Applied with git apply to sources checked out as committed (LF), and
+# carried in bundles byte for byte: never converted to CRLF on Windows.
+patches/*.patch -text
