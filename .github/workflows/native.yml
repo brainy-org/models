@@ -1,0 +1,178 @@
+# Builds the libraries mirror.py builds rather than fetches (libqwen and
+# liblocalvqe) for Linux and Windows, one job per bundle, each uploaded as an
+# artifact named after it. Nothing is pushed from here: `uv run mirror.py ci
+# <run id>` takes the artifacts into .work/, and `uv run mirror.py push`
+# pushes them and records this run in models.lock.json (README.md, "How a
+# bundle is made").
+name: native
+
+on:
+  workflow_dispatch:
+    inputs:
+      bundles:
+        description: Bundles to build, separated by spaces (empty for all of them)
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+env:
+  # The toolkits, each checked against its sha256 (LunarG's and NVIDIA's own).
+  VULKAN_SDK_VERSION: 1.4.328.1
+  VULKAN_SDK_LINUX_SHA256: 241e75b56c91c0d210ed07a7c638ec05a3e5b0e4c66ba9f0ba0f102d823ad6bf
+  VULKAN_SDK_WINDOWS_SHA256: a8675df6d538079c2a719a9373994948091db785b48f142e024254e76348d16c
+  # CUDA 12.9.1 (mirror.py's CUDA_VERSION), from NVIDIA's redistributable
+  # archives: redistrib_12.9.1.json lists each one's path and sha256.
+  CUDA_REDIST: https://developer.download.nvidia.com/compute/cuda/redist
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - id: plan
+        env:
+          WANTED: ${{ inputs.bundles }}
+        shell: python
+        run: |
+          import json, os
+          builds = [
+              ("libqwen-linux-cpu-x64", "ubuntu-22.04", ""),
+              ("libqwen-linux-vulkan-x64", "ubuntu-22.04", "vulkan"),
+              ("libqwen-linux-cuda-x64", "ubuntu-22.04", "cuda"),
+              ("libqwen-linux-cpu-arm64", "ubuntu-22.04-arm", ""),
+              ("libqwen-windows-cpu-x64", "windows-2022", ""),
+              ("libqwen-windows-vulkan-x64", "windows-2022", "vulkan"),
+              ("libqwen-windows-cuda-x64", "windows-2022", "cuda"),
+              ("liblocalvqe-linux-cpu-x64", "ubuntu-22.04", ""),
+              ("liblocalvqe-linux-cpu-arm64", "ubuntu-22.04-arm", ""),
+              ("liblocalvqe-windows-cpu-x64", "windows-2022", ""),
+          ]
+          wanted = os.environ["WANTED"].split()
+          unknown = set(wanted) - {bundle for bundle, _, _ in builds}
+          if unknown:
+              raise SystemExit(f"unknown bundles: {' '.join(sorted(unknown))}")
+          include = [
+              {"bundle": bundle, "os": runner, "gpu": gpu}
+              for bundle, runner, gpu in builds
+              if not wanted or bundle in wanted
+          ]
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"matrix={json.dumps({'include': include})}\n")
+
+  build:
+    needs: plan
+    name: ${{ matrix.bundle }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      # mirror.py's native builds need only the standard library: it runs
+      # with this Python, not with uv and the script's dependencies.
+      - name: Ninja
+        run: python -m pip install ninja==1.13.0
+
+      - name: MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Vulkan SDK (Linux)
+        if: matrix.gpu == 'vulkan' && runner.os == 'Linux'
+        run: |
+          archive="vulkansdk-linux-x86_64-$VULKAN_SDK_VERSION.tar.xz"
+          curl -fsSL -o "$RUNNER_TEMP/$archive" \
+            "https://sdk.lunarg.com/sdk/download/$VULKAN_SDK_VERSION/linux/$archive"
+          echo "$VULKAN_SDK_LINUX_SHA256  $RUNNER_TEMP/$archive" | sha256sum -c -
+          tar -xJf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP"
+          sdk="$RUNNER_TEMP/$VULKAN_SDK_VERSION/x86_64"
+          echo "VULKAN_SDK=$sdk" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$sdk/lib" >> "$GITHUB_ENV"
+          echo "$sdk/bin" >> "$GITHUB_PATH"
+
+      - name: Vulkan SDK (Windows)
+        if: matrix.gpu == 'vulkan' && runner.os == 'Windows'
+        run: |
+          installer="vulkansdk-windows-X64-$VULKAN_SDK_VERSION.exe"
+          curl -fsSL -o "$RUNNER_TEMP/$installer" \
+            "https://sdk.lunarg.com/sdk/download/$VULKAN_SDK_VERSION/windows/$installer"
+          echo "$VULKAN_SDK_WINDOWS_SHA256  $RUNNER_TEMP/$installer" | sha256sum -c -
+          "$RUNNER_TEMP/$installer" --root "C:\\VulkanSDK\\$VULKAN_SDK_VERSION" \
+            --accept-licenses --default-answer --confirm-command install
+          echo "VULKAN_SDK=C:\\VulkanSDK\\$VULKAN_SDK_VERSION" >> "$GITHUB_ENV"
+          echo "MIRROR_SMOKE_DLL_DIRS=C:\\VulkanSDK\\$VULKAN_SDK_VERSION\\Bin" >> "$GITHUB_ENV"
+          echo "C:\\VulkanSDK\\$VULKAN_SDK_VERSION\\Bin" >> "$GITHUB_PATH"
+
+      - name: CUDA
+        if: matrix.gpu == 'cuda'
+        run: |
+          cuda="$RUNNER_TEMP/cuda"
+          mkdir -p "$cuda" "$RUNNER_TEMP/archives"
+          if [ "$RUNNER_OS" = Linux ]; then
+            archives="
+              cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-12.9.86-archive.tar.xz 7a1a5b652e5ef85c82b721d10672fc9a2dbaab44e9bd3c65a69517bf53998c35
+              cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-12.9.79-archive.tar.xz 1f6ad42d4f530b24bfa35894ccf6b7209d2354f59101fd62ec4a6192a184ce99
+              cuda_cccl/linux-x86_64/cuda_cccl-linux-x86_64-12.9.27-archive.tar.xz 8b1a5095669e94f2f9afd7715533314d418179e9452be61e2fde4c82a3e542aa
+              libcublas/linux-x86_64/libcublas-linux-x86_64-12.9.1.4-archive.tar.xz 546addc4a9d82b8f23aa9ba9274b6bc0429a63008a31c759884ac24880796057
+              cuda_profiler_api/linux-x86_64/cuda_profiler_api-linux-x86_64-12.9.79-archive.tar.xz 8c50636bfb97e9420905aa795b9fa6e3ad0b30ec6a6c8b0b8db519beb9241ce6
+            "
+          else
+            archives="
+              cuda_nvcc/windows-x86_64/cuda_nvcc-windows-x86_64-12.9.86-archive.zip 227b109663b5e57d2718bcabb24a4ba0d9d4e52d958e327dc476f7c28691be85
+              cuda_cudart/windows-x86_64/cuda_cudart-windows-x86_64-12.9.79-archive.zip 179e9c43b0735ffe67207b3da556eb5a0c50f3047961882b7657d3b822d34ef8
+              cuda_cccl/windows-x86_64/cuda_cccl-windows-x86_64-12.9.27-archive.zip 17aaa7c6b8f94a417d8f3261780b7e34b9cbdfab7513bce86768623b06aa28b5
+              libcublas/windows-x86_64/libcublas-windows-x86_64-12.9.1.4-archive.zip d534d98b0b453a98914dbf3adf47d7e84b55037abf02f87466439e1dcef581ed
+              cuda_profiler_api/windows-x86_64/cuda_profiler_api-windows-x86_64-12.9.79-archive.zip b05519f8ce4f02167bfc859358f62eb771d89ac2af3a6952a82317f2af4bc5bd
+              visual_studio_integration/windows-x86_64/visual_studio_integration-windows-x86_64-12.9.79-archive.zip d5b6514866395f52f04107da1aa523954f8dc76daf18a9f8699c3d564f294449
+            "
+          fi
+          echo "$archives" | while read -r path sha256; do
+            [ -n "$path" ] || continue
+            file="$RUNNER_TEMP/archives/$(basename "$path")"
+            curl -fsSL -o "$file" "$CUDA_REDIST/$path"
+            echo "$sha256  $file" | sha256sum -c -
+            case "$file" in
+              *.zip) 7z x -y -o"$RUNNER_TEMP/archives" "$file" > /dev/null ;;
+              *) tar -xJf "$file" -C "$RUNNER_TEMP/archives" ;;
+            esac
+            folder="$RUNNER_TEMP/archives/$(basename "$path" | sed -E 's/\.(zip|tar\.xz)$//')"
+            cp -a "$folder"/. "$cuda"/
+            rm -rf "$folder" "$file"
+          done
+          if [ "$RUNNER_OS" = Windows ]; then
+            cuda="$(cygpath -w "$cuda")"
+          else
+            # The driver's library is not on the runner: its stub stands in
+            # for the smoke check's load (the same soname, libcuda.so.1).
+            echo "MIRROR_SMOKE_PRELOAD=$cuda/lib/stubs/libcuda.so" >> "$GITHUB_ENV"
+          fi
+          echo "CUDA_PATH=$cuda" >> "$GITHUB_ENV"
+          echo "CUDAToolkit_ROOT=$cuda" >> "$GITHUB_ENV"
+          echo "$cuda/bin" >> "$GITHUB_PATH"
+
+      - name: Build
+        run: python mirror.py build "${{ matrix.bundle }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.bundle }}
+          path: |
+            .work/${{ matrix.bundle }}/
+            .work/${{ matrix.bundle }}.build.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

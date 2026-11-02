@@ -1,0 +1,24 @@
+diff --git a/ggml/CMakeLists.txt b/ggml/CMakeLists.txt
+index be703e7..8fd1d0c 100644
+--- a/ggml/CMakeLists.txt
++++ b/ggml/CMakeLists.txt
+@@ -8,6 +8,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ option(LOCALVQE_BUILD_SHARED "Build shared library with C API" OFF)
+ option(LOCALVQE_CUDA "Enable GGML CUDA backend" OFF)
+ option(LOCALVQE_VULKAN "Enable GGML Vulkan backend" OFF)
++# brainy-org/models: one self-contained library on x86 too (the static CPU
++# backend at the instruction set the build picks), instead of the per-ISA
++# CPU variants loaded at run time from beside it.
++option(LOCALVQE_X86_STATIC "x86: link one CPU backend in statically" OFF)
+ 
+ # libFuzzer-based fuzz targets for the C API. Requires clang. Implies
+ # -fsanitize=fuzzer,address,undefined unless overridden via
+@@ -50,7 +54,7 @@ if(EMSCRIPTEN)
+ elseif(LOCALVQE_CUDA)
+     set(GGML_CUDA ON CACHE BOOL "" FORCE)
+     set(GGML_STATIC OFF CACHE BOOL "" FORCE)
+-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64")
++elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64" AND NOT LOCALVQE_X86_STATIC)
+     # x86: build all CPU backend variants (SSE4.2 through AVX-512/Zen4) as shared
+     # libraries, selected at runtime based on CPU capabilities.
+     # This avoids needing -march=native (which Nix strips).
