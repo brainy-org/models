@@ -11,6 +11,7 @@ English only, in code and documentation.
 uv run mirror.py build <bundle>    # fetch and check into .work/, no push
 uv run mirror.py push <bundle>     # needs `oras login ghcr.io` (write:packages)
 uv run mirror.py images | vendor
+uv run mirror.py ci <run id>       # libraries built by native.yml into .work/
 ```
 
 ## Invariants
@@ -25,7 +26,8 @@ uv run mirror.py images | vendor
   and a model whose licence forbids redistribution is not mirrored.
 - **Changing a pin is a change in every consumer** (README, "Consumers"):
   brainy-worker's `models.json`, the charts' `tei.*`, the compose files,
-  logbook's `crates/engine/src/mirror.rs`, arvel's `src/mirror.rs`. One
+  logbook's `crates/engine/src/mirror.rs`, arvel's
+  `src/setup/mirror/pins.rs`. One
   commit per repository.
 - **The `docling` bundle follows brainy-worker's `uv.lock`**: the docling
   and rapidocr versions in `mirror.py`'s header must match it, or the bundle

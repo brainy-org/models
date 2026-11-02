@@ -15,8 +15,8 @@ model that its author deletes, moves or rewrites changes nothing for us.
 | `libparakeet` bundle: parakeet.cpp's release builds | `ghcr.io/brainy-org/models/libparakeet` | logbook, arvel |
 | `qwen3-tts` bundle: Qwen3-TTS 12 Hz for qwentts.cpp (GGUF): CustomVoice talkers 0.6B and 1.7B (Q8_0), speech tokenizer (F32) | `ghcr.io/brainy-org/models/qwen3-tts` | arvel (TTS) |
 | `localvqe` bundle: LocalVQE v1.4-AEC, a neural acoustic echo canceller (F32 GGUF, 200K parameters) | `ghcr.io/brainy-org/models/localvqe` | arvel (`--aec localvqe`) |
-| `libqwen` bundle: qwentts.cpp's C API built here for macOS arm64 with Metal, and its `qwen.h` | `ghcr.io/brainy-org/models/libqwen` | arvel (TTS) |
-| `liblocalvqe` bundle: LocalVQE's C API built here for macOS arm64 (CPU) with `patches/localvqe-no-prealign.patch`, its `localvqe_api.h` and the patch | `ghcr.io/brainy-org/models/liblocalvqe` | arvel (`--aec localvqe`) |
+| `libqwen` bundles: qwentts.cpp's C API built here, one tag per platform: macOS arm64 with Metal; Linux x64 on the CPU, Vulkan or CUDA; Linux arm64 on the CPU; Windows x64 on the CPU, Vulkan or CUDA; each with its `qwen.h` (the CUDA ones with NVIDIA's runtime) | `ghcr.io/brainy-org/models/libqwen` | arvel (TTS) |
+| `liblocalvqe` bundles: LocalVQE's C API built here on the CPU with `patches/localvqe-no-prealign.patch`, one tag per platform (macOS arm64, Linux x64 and arm64, Windows x64), each with its `localvqe_api.h` and the patches | `ghcr.io/brainy-org/models/liblocalvqe` | arvel (`--aec localvqe`) |
 | Images: Text Embeddings Inference (amd64, arm64), oras | `ghcr.io/brainy-org/mirror/*` | the Helm charts and compose files of brainy and Galley |
 | Build inputs: ffmpeg's source, libparakeet | `ghcr.io/brainy-org/vendor/brainy-worker-build` | brainy-worker's Dockerfile (`VENDOR_IMAGE`) |
 
@@ -39,11 +39,49 @@ docling and rapidocr versions as brainy-worker's `uv.lock` (the script's
 inline dependencies): their resolvers decide which files a language needs.
 
 `libqwen` and `liblocalvqe` are the exception to "fetch, don't build": no
-upstream publishes the macOS libraries arvel loads, so `mirror.py` builds
-them (`NativeBuild`: a commit, cmake flags, a patch from `patches/`, the
-header's sha256 checked first) on a Mac with Apple silicon, cmake and ninja.
+upstream publishes the libraries arvel loads, so `mirror.py` builds them
+(`NativeBuild`: a commit, the header's sha256 checked first, patches from
+`patches/`; a `Platform` for each target: its cmake flags and host). Each
+platform is its own bundle and tag of the package (`libqwen` is macOS,
+`libqwen-linux-vulkan-x64` is the tag `5916bf7c-linux-vulkan-x64`). The
+macOS ones build on a Mac with Apple silicon, cmake and ninja; the Linux
+and Windows ones on GitHub Actions (`.github/workflows/native.yml`: Ubuntu
+22.04 for glibc 2.34 and newer, its arm64 runner, Windows Server 2022 with
+MSVC), which uploads each as an artifact and pushes nothing:
+
+```bash
+gh workflow run native.yml -R brainy-org/models                 # every one, or -f bundles="libqwen-linux-cpu-x64 ..."
+gh run watch <run id> -R brainy-org/models
+uv run mirror.py ci <run id>      # the artifacts into .work/, each with the record of its build
+uv run mirror.py push libqwen-linux-cpu-x64 ...
+```
+
+Every build is one self-contained library: ggml linked in statically
+(GGML_NATIVE off, ggml's own thread pool rather than OpenMP), libstdc++
+linked in and ggml's symbols kept local on Linux, the C runtime linked in
+(/MT) on Windows. It needs only the C library, and `libvulkan.so.1` /
+`vulkan-1.dll` (the GPU driver's loader) for Vulkan; the CUDA builds need
+the driver's `libcuda.so.1` / `nvcuda.dll` and carry NVIDIA's runtime
+beside the library (cudart, cuBLAS, cuBLASLt, CUDA 12.9.1,
+redistributable under NVIDIA's EULA): an rpath of `$ORIGIN` finds it on
+Linux, a load with the library's folder in the search path on Windows. The
+CPU baseline is AVX2 with FMA and F16C on x64 and ARMv8.2-A with dotprod
+and fp16 on arm64; the CUDA builds carry SASS for Turing, Ampere, Ada and
+consumer Blackwell (sm 75, 80, 86, 89, 120a) and Ada's PTX for Hopper and
+newer. LocalVQE's own build makes ggml's per-ISA CPU variants on x86 as
+libraries loaded from beside it; `patches/localvqe-x86-static.patch` makes
+it link one in, as it does on arm64. (MSVC ignores the
+`-ffp-contract=off` it asks for its adaptive filter, with a warning: MSVC
+does not contract floating point by default.) Before it is uploaded each library is
+loaded and every function of its header resolved (`qt_version()` called);
+a CUDA build on Windows, which cannot load without the driver, is checked
+on its export table instead (the Linux one loads with the toolkit's stub
+of the driver).
+
 The build is not reproducible bit for bit: a build already in `.work/` is
-reused, and the lock records what it was built from.
+reused, and the lock records what it was built from (`built_on`: the CI
+run, its commit, the runner image, the compilers, the smoke check, the
+libraries it needs).
 
 ```bash
 gh auth refresh -s write:packages
@@ -71,7 +109,7 @@ Each consumer pins what it uses, copied from `models.lock.json`:
 | brainy, Galley (Helm) | `tei.bundle`, `tei.revision`, `tei.image`, `tei.puller.image` in `values.yaml` | an oras init container, with the `ghcr-pull` secret |
 | brainy, Galley (compose) | the `tei-model` service, `*_TEI_IMAGE` | the same, with `GHCR_USER`/`GHCR_TOKEN` from `.env` |
 | logbook | the files' sha256 in `crates/engine/src/mirror.rs` (`parakeet`, `parakeet-voice`, `libparakeet`) | logbook-server itself, by blob digest, on first start |
-| arvel | manifest digests and files' sha256 in `src/mirror.rs` (`parakeet`, `libparakeet`, `qwen3-tts`, `localvqe`, `libqwen`, `liblocalvqe`) | the `arvel` binary itself, by blob digest, on first start, into `~/.cache/brainy-org` (logbook's folders for what both load) |
+| arvel | manifest digests and files' sha256 in `src/setup/mirror/pins.rs` (`parakeet`, `libparakeet`, `qwen3-tts`, `localvqe`, `libqwen`, `liblocalvqe`) | the `arvel` binary itself, by blob digest, on first start, into `~/.cache/brainy-org` (logbook's folders for what both load) |
 | the `ae` VM's TEI | brainy's `helm/README.md` | `oras pull` |
 
 ## Adding or changing a model
@@ -99,10 +137,10 @@ is made public only once its licences have been read for redistribution.
 with no token, and its licence (Apache-2.0, the GGUFs and the Qwen weights
 they come from) allows it. `models/localvqe` (Apache-2.0, which allows it)
 is public since 2026-10-31, for arvel too. `models/libqwen` (MIT) and
-`models/liblocalvqe` (Apache-2.0 and MIT) were pushed on 2026-10-31 for the
-arvel binary, which pulls them with no token: it works only once each
-package is made public in its settings ("Change visibility"); until then
-`ARVEL_GHCR_TOKEN` (a token with `read:packages`) lets arvel pull them. The others are private, readable with the organization's pull secret
+`models/liblocalvqe` (Apache-2.0 and MIT) are public, for the arvel binary
+too; a tag pushed to a public package is public, the Linux and Windows
+ones included (the CUDA ones carry NVIDIA's runtime, which its EULA lets
+an application redistribute). The others are private, readable with the organization's pull secret
 (`ghcr-pull` in the clusters) or a token with `read:packages`. GitHub
 Actions read them with `GITHUB_TOKEN` only where a package grants the
 repository access (package settings, "Manage Actions access"): brainy-worker
