@@ -378,9 +378,12 @@ def _native(
         if (platform.system(), platform.machine()) != platform_.host:
             sys.exit(f"{name}: built on {' '.join(platform_.host)} only")
         src = WORK / "src" / package
+        # The files as committed (LF): the header's sha256 and the patches
+        # are of those bytes, also on Windows.
+        lf = ["git", "-c", "core.autocrlf=false"]
         if not (src / ".git").exists():
-            subprocess.run(["git", "clone", spec.repo, str(src)], check=True)
-        git = ["git", "-C", str(src)]
+            subprocess.run([*lf, "clone", spec.repo, str(src)], check=True)
+        git = [*lf, "-C", str(src)]
         subprocess.run([*git, "fetch", "--depth", "1", "origin", spec.commit], check=False)
         subprocess.run([*git, "checkout", "-q", "--force", spec.commit], check=True)
         subprocess.run(
