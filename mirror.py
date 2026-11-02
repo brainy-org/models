@@ -323,10 +323,12 @@ ARM64 = ("-DGGML_CPU_ARM_ARCH=armv8.2-a+dotprod+fp16",)
 # ggml's own thread pool, as on the Mac: no libgomp or vcomp140.dll to ship.
 PORTABLE = ("-DGGML_NATIVE=OFF", "-DGGML_OPENMP=OFF")
 # Linux: ggml's archives built for a shared library, libstdc++ linked in,
-# and the archives' symbols (ggml's) kept local, so a process that loads
-# another ggml (libparakeet) does not bind this library's calls to it.
+# the archives' symbols (ggml's) kept local, so a process that loads another
+# ggml (libparakeet) does not bind this library's calls to it, and no rpath
+# of the build machine's folders.
 LINUX = (
     "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+    "-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON",
     "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc -Wl,--exclude-libs,ALL",
 )
 # Windows: the C runtime linked in (/MT), no VC++ redistributable needed.
@@ -543,6 +545,8 @@ def _smoke(spec: NativeBuild, library: Path) -> dict[str, object]:
         ).stdout
         result["needs"] = re.findall(r"\(NEEDED\).*\[(.+)\]", out)
         result["rpath"] = re.findall(r"\((?:RUNPATH|RPATH)\).*\[(.+)\]", out)
+        if set(result["rpath"]) - {"$ORIGIN"}:
+            sys.exit(f"{library.name} has the rpath {result['rpath']}")
         out = subprocess.run(
             ["objdump", "-T", str(library)], capture_output=True, text=True, check=True
         ).stdout
@@ -609,7 +613,6 @@ LIBQWEN_PLATFORMS = (
             *X64,
             *LINUX,
             *CUDA,
-            "-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON",
             "-DCMAKE_INSTALL_RPATH=$ORIGIN",
         ),
         redist=("lib/libcudart.so.12", "lib/libcublas.so.12", "lib/libcublasLt.so.12"),
