@@ -17,6 +17,7 @@ model that its author deletes, moves or rewrites changes nothing for us.
 | `localvqe` bundle: LocalVQE v1.4-AEC, a neural acoustic echo canceller (F32 GGUF, 200K parameters) | `ghcr.io/brainy-org/models/localvqe` | arvel (`--aec localvqe`) |
 | `libqwen` bundles: qwentts.cpp's C API built here, one tag per platform: macOS arm64 with Metal; Linux x64 on the CPU, Vulkan or CUDA; Linux arm64 on the CPU; Windows x64 on the CPU, Vulkan or CUDA; each with its `qwen.h` (the CUDA ones with NVIDIA's runtime) | `ghcr.io/brainy-org/models/libqwen` | arvel (TTS) |
 | `liblocalvqe` bundles: LocalVQE's C API built here on the CPU with `patches/localvqe-no-prealign.patch`, one tag per platform (macOS arm64, Linux x64 and arm64, Windows x64), each with its `localvqe_api.h` and the patches | `ghcr.io/brainy-org/models/liblocalvqe` | arvel (`--aec localvqe`) |
+| `face-landmarker` bundle: MediaPipe Face Landmarker (float16, version 1), the `.task` file Google publishes at a versioned URL (face detector, face mesh, blendshapes; Apache-2.0) | `ghcr.io/brainy-org/models/face-landmarker` | arvel (`--gaze`, served to the satellite's page) |
 | Images: Text Embeddings Inference (amd64, arm64), oras | `ghcr.io/brainy-org/mirror/*` | the Helm charts and compose files of brainy and Galley |
 | Build inputs: ffmpeg's source, libparakeet | `ghcr.io/brainy-org/vendor/brainy-worker-build` | brainy-worker's Dockerfile (`VENDOR_IMAGE`) |
 
@@ -109,7 +110,7 @@ Each consumer pins what it uses, copied from `models.lock.json`:
 | brainy, Galley (Helm) | `tei.bundle`, `tei.revision`, `tei.image`, `tei.puller.image` in `values.yaml` | an oras init container, with the `ghcr-pull` secret |
 | brainy, Galley (compose) | the `tei-model` service, `*_TEI_IMAGE` | the same, with `GHCR_USER`/`GHCR_TOKEN` from `.env` |
 | logbook | the files' sha256 in `crates/engine/src/mirror.rs` (`parakeet`, `parakeet-voice`, `libparakeet`) | logbook-server itself, by blob digest, on first start |
-| arvel | manifest digests and files' sha256 in `src/setup/mirror/pins.rs` (`parakeet`, `libparakeet`, `qwen3-tts`, `localvqe`, `libqwen`, `liblocalvqe`) | the `arvel` binary itself, by blob digest, on first start, into `~/.cache/brainy-org` (logbook's folders for what both load) |
+| arvel | manifest digests and files' sha256 in `src/setup/mirror/pins.rs` (`parakeet`, `libparakeet`, `qwen3-tts`, `localvqe`, `libqwen`, `liblocalvqe`, `face-landmarker`) | the `arvel` binary itself, by blob digest, on first start, into `~/.cache/brainy-org` (logbook's folders for what both load) |
 | the `ae` VM's TEI | brainy's `helm/README.md` | `oras pull` |
 
 ## Adding or changing a model
@@ -140,7 +141,8 @@ is public since 2026-10-31, for arvel too. `models/libqwen` (MIT) and
 `models/liblocalvqe` (Apache-2.0 and MIT) are public, for the arvel binary
 too; a tag pushed to a public package is public, the Linux and Windows
 ones included (the CUDA ones carry NVIDIA's runtime, which its EULA lets
-an application redistribute). The others are private, readable with the organization's pull secret
+an application redistribute). `models/face-landmarker` (Apache-2.0, by
+Google's model cards) is public since 2026-11-03, for arvel's `--gaze`. The others are private, readable with the organization's pull secret
 (`ghcr-pull` in the clusters) or a token with `read:packages`. GitHub
 Actions read them with `GITHUB_TOKEN` only where a package grants the
 repository access (package settings, "Manage Actions access"): brainy-worker

@@ -181,6 +181,23 @@
         "brainy-worker (docling's artifacts_path)"
       ]
     },
+    "face-landmarker": {
+      "files": {
+        "NOTICE.md": {
+          "sha256": "73a633e6117b20436bf443e718a051b9419924fbf580b92f31801eab6d8d832f",
+          "size": 409
+        },
+        "face_landmarker.task": {
+          "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "size": 3758596
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/face-landmarker:float16-1@sha256:7d1b2e3c40f2bc189387bf51d73a1279af42a3829f017a6e3db8d99b154ad0d8",
+      "sources": [],
+      "used_by": [
+        "arvel (--gaze, served to the satellite's page)"
+      ]
+    },
     "liblocalvqe": {
       "files": {
         "NOTICE.md": {

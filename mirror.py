@@ -906,6 +906,25 @@ BUNDLES: dict[str, Bundle] = {
             "LocalVQE's C API on the CPU with arvel's patch",
         ),
         Bundle(
+            name="face-landmarker",
+            tag="float16-1",
+            used_by=["arvel (--gaze, served to the satellite's page)"],
+            description="MediaPipe Face Landmarker (float16, version 1): face detector, "
+            "face mesh and blendshapes in one .task file",
+            # No repository: Google publishes the file at a versioned URL;
+            # the sha256 is the one it was reviewed with (2026-11-03). Each
+            # model it holds is Apache-2.0 by its model card.
+            extra=_release(
+                {
+                    "face_landmarker.task": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+                },
+                "https://storage.googleapis.com/mediapipe-models/face_landmarker/"
+                "face_landmarker/float16/1",
+                "Apache-2.0 (Google's MediaPipe model cards: BlazeFace short range, "
+                "Face Mesh V2, Blendshape V2)",
+            ),
+        ),
+        Bundle(
             name="qwen3-embedding-0.6b",
             tag="3d106eab",
             used_by=["brainy (TEI)", "galley (TEI)"],
