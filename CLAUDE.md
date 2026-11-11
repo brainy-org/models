@@ -2,8 +2,12 @@
 
 The mirror of third-party model weights, images and build inputs on
 ghcr.io/brainy-org. `README.md` says what is mirrored, how and who uses it;
-`mirror.py` is the only code; `models.lock.json` is the record it writes.
-English only, in code and documentation.
+`mirror.py` is the mirror's code; `models.lock.json` is the record it writes.
+`finetune/` is apart: a recipe that tunes parakeet-tdt-0.6b-v3 for Italian
+heard across a room, run on Kaggle (`finetune/README.md`); what it makes is
+mirrored only once it wins on the owner's recordings, as any other bundle,
+and its pins follow the same rule below. English only, in code and
+documentation.
 
 ## Commands
 
@@ -12,6 +16,7 @@ uv run mirror.py build <bundle>    # fetch and check into .work/, no push
 uv run mirror.py push <bundle>     # needs `oras login ghcr.io` (write:packages)
 uv run mirror.py images | vendor
 uv run mirror.py ci <run id>       # libraries built by native.yml into .work/
+uvx ruff check .                   # mirror.py and finetune/ (ruff.toml)
 ```
 
 ## Invariants

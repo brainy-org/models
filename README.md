@@ -127,6 +127,17 @@ Upgrading docling in brainy-worker is step 2 for `docling`: bump the
 versions in `mirror.py`'s header with `uv.lock`, push, copy the entry into
 `models.json`, and run the worker's tests offline (its README, "Models").
 
+## Fine-tuning
+
+`finetune/` holds a recipe, not a bundle: it tunes `parakeet-tdt-0.6b-v3` on
+public Italian speech put into simulated rooms (real and simulated room
+impulse responses, noise, a low level), on Kaggle's free GPUs, and converts
+the result to the q8_0 GGUF libparakeet loads, checked against the
+`parakeet` bundle's. Its sources are pinned like the mirror's (commits and
+sha256). A tuned model is mirrored here, as a new bundle with its
+`NOTICE.md` (CC-BY-4.0 of the base model), only once it beats the current
+one on the owner's own recordings. How to run it: `finetune/README.md`.
+
 ## Access
 
 `models/parakeet`, `models/parakeet-voice` and `models/libparakeet` are
