@@ -2,7 +2,7 @@
   "bundles": {
     "arvel-sandbox-guest-amd64": {
       "built_from": {
-        "commit": "813d9ea608654a507ad8dbfc3c3f7ac32c2b4d29",
+        "commit": "9dd404275e591931f94a8ac80550781ab383a8f9",
         "dirty": false,
         "repo": "https://github.com/brainy-org/arvel-sandbox"
       },
@@ -12,43 +12,43 @@
           "size": 12528433
         },
         "NOTICE.md": {
-          "sha256": "253c157b096fbfd35186cf1b266c54ce46b14562b56a7c0513f7b1f5025a3b7c",
-          "size": 1746
+          "sha256": "bd3dd1fb20cb877096ec7f82dcec2d05ac73f3216f61e7b41163804cbbff5831",
+          "size": 2506
         },
         "guest.json": {
-          "sha256": "8b797b6eab32f93c7541af29d96c3fc63a1d01ad5ee962d92fdb0f5ece14489e",
-          "size": 2213
+          "sha256": "22bffb56d9970cc3e34156ac33b31e8970606fb7fe8ba8d0cfbe211bab8d50ae",
+          "size": 2322
         },
         "initramfs.cpio.gz": {
-          "sha256": "2480b7e26bd377618cbd2397584e6338aa6796dd6a2a9e1de68db81911d0103d",
-          "size": 12822656
+          "sha256": "b5701188fee2e443c020f64794916551d97f24827ec4542ebc4911a8ebf1fe0c",
+          "size": 12819661
         },
         "packages-sandbox.txt": {
-          "sha256": "b29ee21a79f8fa319ba71ac393c69339a31710e5473a7b58d34727fe7bf431f7",
-          "size": 18186
+          "sha256": "10cfc9af5ce8b06c94844ea32dada90f59e440b25aebeb402103737a7615ff53",
+          "size": 20179
         },
         "packages-toolbox.txt": {
-          "sha256": "d21b7e1648e939763ab3a64b519169714d9f1ab10fc699afe31aec49a8fd35fa",
-          "size": 3955
+          "sha256": "566e46b38df0ce2a0782d77b95399482369f9e49bf62798dd8f26abba1d82825",
+          "size": 6839
         },
         "sandbox-root.img.zst": {
-          "sha256": "d32ef0dddff3a952a8658118cb0ba69b340cfb09b7b5b4c413c09dc748cd588a",
-          "size": 808446912
+          "sha256": "85cc9eab7be1f41d603fd7a6cc07168ccdd69fe1a2ba68fc32b012e0961272e8",
+          "size": 814274144
         },
         "sandbox-rootfs.tar.zst": {
-          "sha256": "2be21d789e1e2d394694870cb621f88c10f5b08d424e1def0897b85baadca24d",
-          "size": 554593176
+          "sha256": "d762c65a7946363256b3e85834043aab49271246fb7a906cc8bcedd4916a85a0",
+          "size": 447023951
         },
         "toolbox-root.img.zst": {
-          "sha256": "6c82e3eccf97eeb4e4baf44a5a812a1f0179cdd9c2b7c61e59adff3856f754af",
-          "size": 324314835
+          "sha256": "ddeb960f13bf1752b1e8c9c498326a5826306d61af7ab4ba7cc3e3995e193530",
+          "size": 499096107
         },
         "toolbox-rootfs.tar.zst": {
-          "sha256": "116cbd85aeaac506b16486a623000c200050b153329045db48bb1c18330af29f",
-          "size": 252986659
+          "sha256": "6b6c59fbfc472650e4eae591fa01a0afc09c244d9e047fe816d55b15903c9281",
+          "size": 301642069
         }
       },
-      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:813d9ea6-linux-amd64@sha256:f1e26b5c0b501291231bc0d1317e04b8a9efe4d286a8d2d191e59a0c233efb5a",
+      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:9dd40427-linux-amd64@sha256:e96f4da3ddad034b6482ca80cac0153727d618aa844316b3a3701c0423a5687c",
       "sources": [
         {
           "kernel": "6.18.60-0-virt",
@@ -58,17 +58,18 @@
           "what": "netboot vmlinuz-virt and modloop-virt (the kernel and its modules), minirootfs (the initramfs)"
         },
         {
-          "commit": "813d9ea608654a507ad8dbfc3c3f7ac32c2b4d29",
+          "commit": "9dd404275e591931f94a8ac80550781ab383a8f9",
           "licence": "the repository's",
           "name": "arvel-sandbox",
           "repo": "https://github.com/brainy-org/arvel-sandbox"
         },
         {
-          "licence": "BSD-3-Clause and others (Chromium's credits, about:credits)",
+          "licence": "BSD-3-Clause and others (/usr/share/doc/chromium/copyright in each root)",
           "name": "chromium",
-          "playwright_revision": "1248",
-          "version": "156.0.8078.4",
-          "what": "Chrome for Testing and Chrome Headless Shell, as Playwright installs them"
+          "package": "chromium",
+          "source": "https://sources.debian.org/src/chromium/156.0.8078.79-1~deb12u1/",
+          "version": "156.0.8078.79-1~deb12u1",
+          "what": "Debian's chromium package (bookworm-security), Playwright's browser in both roots"
         },
         {
           "image": "debian:bookworm-slim",
@@ -96,7 +97,7 @@
     },
     "arvel-sandbox-guest-arm64": {
       "built_from": {
-        "commit": "813d9ea608654a507ad8dbfc3c3f7ac32c2b4d29",
+        "commit": "9dd404275e591931f94a8ac80550781ab383a8f9",
         "dirty": false,
         "repo": "https://github.com/brainy-org/arvel-sandbox"
       },
@@ -106,43 +107,43 @@
           "size": 9746082
         },
         "NOTICE.md": {
-          "sha256": "085da484a89dc8b5da8fc68c6d22df68fb6c3bf4aa11dfbeb020a0521d04319e",
-          "size": 1746
+          "sha256": "c84d9761082c4b7a3f0e1cc3ed5f1deeef9d19b597dd0cd54f54694a3cb98866",
+          "size": 2506
         },
         "guest.json": {
-          "sha256": "c8fc139f3ef35dd27c418341d616e9f1c84611d09a1f9ae6b68cc6f85e3549b2",
-          "size": 2214
+          "sha256": "6f3ccabca8d1217c50541042cbf2f458516b6004aa4c31ad8a0c2d01428de8ff",
+          "size": 2322
         },
         "initramfs.cpio.gz": {
-          "sha256": "06e56c32b8fe37f45c347d7000a92182ce436d1cf73dc162b0549300a4999c35",
-          "size": 12778109
+          "sha256": "abe29970e8f4f96ccd4329de800d5d379f0f78bea90befec91fa59620f61ed9f",
+          "size": 12778873
         },
         "packages-sandbox.txt": {
-          "sha256": "768dd9722b6398c5b3444ec8bf18e7b0b380393349b452b670a72acb385ec878",
-          "size": 18137
+          "sha256": "397e7825779ed9bc67227f6833d1d31e5db07cac1d30e72fcc6d0036509c9ab3",
+          "size": 20130
         },
         "packages-toolbox.txt": {
-          "sha256": "d21b7e1648e939763ab3a64b519169714d9f1ab10fc699afe31aec49a8fd35fa",
-          "size": 3955
+          "sha256": "08de3f1dcf63ff802120ded4957d04335c16bfaeea10dae3fe6688202a4cad69",
+          "size": 6791
         },
         "sandbox-root.img.zst": {
-          "sha256": "690b6f6d0c4a176eb3fdee55a67b7481ff77598a604f8ea820e3fbe8a46f6b64",
-          "size": 843249344
+          "sha256": "37e4b542c5f420f32c4279fb6c57f7c237f55850301f37a3ff85f00a661c3e61",
+          "size": 776803753
         },
         "sandbox-rootfs.tar.zst": {
-          "sha256": "1fa9ed56860001fc703a6b027f96709d1657ab0a21792e10dbe8fd67469b5686",
-          "size": 552461373
+          "sha256": "a7c2927fec9d8dc7e9a2c795091a666d52b5f4d7eb7ea65fe766c9a395a57963",
+          "size": 442592194
         },
         "toolbox-root.img.zst": {
-          "sha256": "171f14cf5b5b19f07ae26548cbf2e85f54591e4f8c56486cae8e33802003e4eb",
-          "size": 475892457
+          "sha256": "fe0cbcf791884c0202e10a9321ecfc6a5cfec6107f8916ae5c8c16a5da0168cc",
+          "size": 501823895
         },
         "toolbox-rootfs.tar.zst": {
-          "sha256": "1e7512bd6c5fa772d837ac0ca620fdec3999abf5e29091859b8b3a6cadc10586",
-          "size": 253354696
+          "sha256": "01e2993bf10500653c0e0c4a16e060eeb41634e80e96045026e188f9d6950cd4",
+          "size": 301385009
         }
       },
-      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:813d9ea6-linux-arm64@sha256:a0b5405b77c14f965796c2bf64734d11ab5266065e7d05acae3549ccab2eb662",
+      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:9dd40427-linux-arm64@sha256:39f75399f6c0746b6c198fe21e6b9e2232ff0f5c59a01b537c228ac6605163d1",
       "sources": [
         {
           "kernel": "6.18.60-0-virt",
@@ -152,17 +153,18 @@
           "what": "netboot vmlinuz-virt and modloop-virt (the kernel and its modules), minirootfs (the initramfs)"
         },
         {
-          "commit": "813d9ea608654a507ad8dbfc3c3f7ac32c2b4d29",
+          "commit": "9dd404275e591931f94a8ac80550781ab383a8f9",
           "licence": "the repository's",
           "name": "arvel-sandbox",
           "repo": "https://github.com/brainy-org/arvel-sandbox"
         },
         {
-          "licence": "BSD-3-Clause and others (Chromium's credits, about:credits)",
+          "licence": "BSD-3-Clause and others (/usr/share/doc/chromium/copyright in each root)",
           "name": "chromium",
-          "playwright_revision": "1248",
-          "version": "156.0.8078.4",
-          "what": "Chrome for Testing and Chrome Headless Shell, as Playwright installs them"
+          "package": "chromium",
+          "source": "https://sources.debian.org/src/chromium/156.0.8078.79-1~deb12u1/",
+          "version": "156.0.8078.79-1~deb12u1",
+          "what": "Debian's chromium package (bookworm-security), Playwright's browser in both roots"
         },
         {
           "image": "debian:bookworm-slim",
