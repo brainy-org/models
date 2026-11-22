@@ -16,6 +16,7 @@
     uv run mirror.py images                copy the third-party images to ghcr.io/brainy-org/mirror
     uv run mirror.py vendor                push the build inputs image (ffmpeg, libparakeet)
     uv run mirror.py ci RUN                take the libraries a run of native.yml built into .work/
+    python3 mirror.py guest DIR            push arvel-sandbox's guest, built there, and record it
 
 Every source is a commit (or a file with its sha256), never a branch or a
 tag: what is mirrored is what was reviewed. A bundle is an OCI artifact, one
@@ -1037,10 +1038,9 @@ def build(bundle: Bundle) -> Path:
     return directory
 
 
-def push(bundle: Bundle, directory: Path) -> dict[str, object]:
-    files = _files(directory)
-    reference = f"{REGISTRY}/models/{bundle.package or bundle.name}:{bundle.tag}"
-    print(f"{bundle.name}: pushing {len(files)} files to {reference}", flush=True)
+def _oras_push(reference: str, description: str, directory: Path, files) -> str:
+    """Pushes every file of the directory as a layer titled with its path;
+    returns the manifest's digest."""
     result = subprocess.run(
         [
             "oras",
@@ -1051,7 +1051,7 @@ def push(bundle: Bundle, directory: Path) -> dict[str, object]:
             "--annotation",
             f"org.opencontainers.image.source={SOURCE}",
             "--annotation",
-            f"org.opencontainers.image.description={bundle.description}",
+            f"org.opencontainers.image.description={description}",
             "--format",
             "json",
             *[f"{path}:application/octet-stream" for path in files],
@@ -1061,7 +1061,14 @@ def push(bundle: Bundle, directory: Path) -> dict[str, object]:
         capture_output=True,
         text=True,
     )
-    digest = json.loads(result.stdout)["digest"]
+    return json.loads(result.stdout)["digest"]
+
+
+def push(bundle: Bundle, directory: Path) -> dict[str, object]:
+    files = _files(directory)
+    reference = f"{REGISTRY}/models/{bundle.package or bundle.name}:{bundle.tag}"
+    print(f"{bundle.name}: pushing {len(files)} files to {reference}", flush=True)
+    digest = _oras_push(reference, bundle.description, directory, files)
     built = WORK / f"{bundle.name}.build.json"
     return {
         "ref": f"{reference}@{digest}",
@@ -1202,6 +1209,148 @@ def ci(run: str) -> None:
         print(f"{name}: taken from run {run}", flush=True)
 
 
+# arvel-sandbox's guest (`arvel-sandbox-guest`): built there, not here (its
+# guest/build.sh, guest/disks.sh and guest/bundle.sh, on a Mac in a builder
+# VM or on Linux in a chroot: .github/workflows/guest.yml), one tag per
+# architecture; this pushes the folder bundle.sh made and records it.
+GUEST_PACKAGE = "arvel-sandbox-guest"
+GUEST_FILES = (
+    "guest.json",
+    "Image.zst",
+    "initramfs.cpio.gz",
+    "sandbox-root.img.zst",
+    "toolbox-root.img.zst",
+)
+GUEST_OPTIONAL = (
+    "sandbox-rootfs.tar.zst",
+    "toolbox-rootfs.tar.zst",
+    "packages-sandbox.txt",
+    "packages-toolbox.txt",
+)
+
+
+def _guest_notice(record: dict) -> str:
+    sources = record["sources"]
+    rows = [
+        (
+            "arvel-sandbox",
+            f"{sources['arvel-sandbox']['repo']} at `{record['commit']}`"
+            + (" (with uncommitted changes)" if record.get("dirty") else ""),
+            "sandboxd, arvel-guest, init scripts, image/ files: brainy-org's own code",
+        ),
+        (
+            "Linux kernel and modules",
+            (
+                f"Alpine Linux {sources['alpine']['version']}, linux-virt "
+                f"{sources['alpine']['kernel']} (netboot vmlinuz-virt, modloop-virt)"
+            ),
+            "GPL-2.0; source: https://gitlab.alpinelinux.org/alpine/aports (main/linux-lts)",
+        ),
+        (
+            "initramfs userland",
+            f"Alpine Linux {sources['alpine']['version']} minirootfs",
+            (
+                "busybox GPL-2.0, musl MIT, apk-tools GPL-2.0, ca-certificates MPL-2.0; "
+                "source: https://gitlab.alpinelinux.org/alpine/aports"
+            ),
+        ),
+        (
+            "static curl",
+            f"{sources['static-curl']['repo']} {sources['static-curl']['version']}",
+            "curl (MIT-like), OpenSSL Apache-2.0, and the libraries it links",
+        ),
+        (
+            "Debian roots (sandbox, toolbox)",
+            (
+                f"{sources['debian']['image']}, layer `{sources['debian']['layer']}`, "
+                "upgraded and with packages installed at build time "
+                "(packages-sandbox.txt, packages-toolbox.txt)"
+            ),
+            (
+                "per package: /usr/share/doc/<package>/copyright in each root; "
+                "source: https://snapshot.debian.org and https://sources.debian.org"
+            ),
+        ),
+        (
+            "Playwright",
+            f"playwright {sources['playwright']['version']} from PyPI (/opt/pagecheck, /opt/routine)",
+            "Apache-2.0",
+        ),
+        (
+            "Chromium",
+            (
+                f"Chrome for Testing and Chrome Headless Shell {sources['chromium']['version']} "
+                f"(Playwright's revision {sources['chromium']['playwright_revision']}), "
+                "as Playwright installs them"
+            ),
+            "BSD-3-Clause and the licences of its third-party code (Chromium's about:credits)",
+        ),
+    ]
+    lines = [
+        f"# {GUEST_PACKAGE} ({record['arch']})",
+        "",
+        (
+            "The guest arvel-sandbox's sandbox-vm boots: kernel, initramfs and the sandbox's and "
+            "the toolbox's root disks (zstd), with the same roots as plain tars for a pod's image."
+        ),
+        "",
+        "| What | Source | Licence |",
+        "|---|---|---|",
+        *[f"| {what} | {source} | {licence} |" for what, source, licence in rows],
+        "",
+        (
+            "The GPL's corresponding source of the kernel, busybox and the Debian packages is "
+            "published by Alpine and Debian at the versions above."
+        ),
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def guest(directory: Path) -> None:
+    """Pushes the guest folder arvel-sandbox's guest/bundle.sh made and
+    records it as `arvel-sandbox-guest-<arch>`. Needs nothing but oras."""
+    directory = directory.resolve()
+    for name in GUEST_FILES:
+        if not (directory / name).is_file():
+            sys.exit(f"guest: {directory / name} is missing (arvel-sandbox's guest/bundle.sh)")
+    record = json.loads((directory / "guest.json").read_text())
+    arch, commit = record["arch"], record["commit"]
+    if arch not in ("arm64", "amd64") or not re.fullmatch(r"[0-9a-f]{40}", commit):
+        sys.exit(f"guest: guest.json says arch {arch!r}, commit {commit!r}")
+    extra = sorted(
+        p.name
+        for p in directory.iterdir()
+        if p.name not in (*GUEST_FILES, *GUEST_OPTIONAL, "NOTICE.md")
+    )
+    if extra:
+        sys.exit(f"guest: not part of the bundle: {', '.join(extra)}")
+    (directory / "NOTICE.md").write_text(_guest_notice(record))
+    files = _files(directory)
+    tag = f"{commit[:8]}{'-dirty' if record.get('dirty') else ''}-linux-{arch}"
+    reference = f"{REGISTRY}/models/{GUEST_PACKAGE}:{tag}"
+    print(f"{GUEST_PACKAGE}: pushing {len(files)} files to {reference}", flush=True)
+    digest = _oras_push(
+        reference,
+        f"arvel-sandbox's guest for linux/{arch}: kernel, initramfs, root disks",
+        directory,
+        files,
+    )
+    lock = _lock()
+    lock["bundles"][f"{GUEST_PACKAGE}-{arch}"] = {
+        "ref": f"{reference}@{digest}",
+        "used_by": ["arvel-sandbox (sandbox-vm's guest)"],
+        "sources": [{"name": name, **source} for name, source in sorted(record["sources"].items())],
+        "built_from": {
+            "repo": "https://github.com/brainy-org/arvel-sandbox",
+            "commit": commit,
+            "dirty": bool(record.get("dirty")),
+        },
+        "files": files,
+    }
+    _write(lock)
+    print(f"{GUEST_PACKAGE}-{arch}: {reference}@{digest}", flush=True)
+
+
 def _lock() -> dict:
     if LOCK.exists():
         return json.loads(LOCK.read_text())
@@ -1221,7 +1370,13 @@ def main() -> int:
     sub.add_parser("images")
     sub.add_parser("vendor")
     sub.add_parser("ci").add_argument("run", help="the id of a run of native.yml")
+    sub.add_parser("guest").add_argument(
+        "directory", type=Path, help="the folder arvel-sandbox's guest/bundle.sh made"
+    )
     arguments = parser.parse_args()
+    if arguments.command == "guest":
+        guest(arguments.directory)
+        return 0
     if arguments.command == "ci":
         ci(arguments.run)
         return 0

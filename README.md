@@ -18,6 +18,7 @@ model that its author deletes, moves or rewrites changes nothing for us.
 | `libqwen` bundles: qwentts.cpp's C API built here, one tag per platform: macOS arm64 with Metal; Linux x64 on the CPU, Vulkan or CUDA; Linux arm64 on the CPU; Windows x64 on the CPU, Vulkan or CUDA; each with its `qwen.h` (the CUDA ones with NVIDIA's runtime) | `ghcr.io/brainy-org/models/libqwen` | arvel (TTS) |
 | `liblocalvqe` bundles: LocalVQE's C API built here on the CPU with `patches/localvqe-no-prealign.patch`, one tag per platform (macOS arm64, Linux x64 and arm64, Windows x64), each with its `localvqe_api.h` and the patches | `ghcr.io/brainy-org/models/liblocalvqe` | arvel (`--aec localvqe`) |
 | `face-landmarker` bundle: MediaPipe Face Landmarker (float16, version 1), the `.task` file Google publishes at a versioned URL (face detector, face mesh, blendshapes; Apache-2.0) | `ghcr.io/brainy-org/models/face-landmarker` | arvel (`--gaze`, served to the satellite's page) |
+| `arvel-sandbox-guest` bundles: arvel-sandbox's guest, one tag per architecture (`<commit>-linux-arm64`, `-amd64`): the kernel (Alpine's linux-virt), the initramfs, the sandbox's and the toolbox's Debian root disks with Playwright's Chromium (zstd), the same roots as tars for a pod's image, the package lists, `guest.json`. Built by arvel-sandbox, not here | `ghcr.io/brainy-org/models/arvel-sandbox-guest` | arvel-sandbox (`sandbox-vm`'s guest) |
 | Images: Text Embeddings Inference (amd64, arm64), oras | `ghcr.io/brainy-org/mirror/*` | the Helm charts and compose files of brainy and Galley |
 | Build inputs: ffmpeg's source, libparakeet | `ghcr.io/brainy-org/vendor/brainy-worker-build` | brainy-worker's Dockerfile (`VENDOR_IMAGE`) |
 
@@ -79,6 +80,25 @@ a CUDA build on Windows, which cannot load without the driver, is checked
 on its export table instead (the Linux one loads with the toolkit's stub
 of the driver).
 
+`arvel-sandbox-guest` is the other exception: arvel-sandbox builds it (its
+`guest/build.sh`, `guest/disks.sh` and `guest/bundle.sh`; on a Mac in a
+builder VM, on Linux in a chroot), from pinned inputs (Alpine's and static
+curl's files by sha256, Debian's layer by digest, Playwright by version; the
+Debian packages are those of the day, upgraded) and records them in the
+bundle's `guest.json`. `mirror.py guest DIR` takes the folder `bundle.sh`
+made, writes its `NOTICE.md` from `guest.json`, pushes it as
+`arvel-sandbox-guest:<commit>-linux-<arch>` (`-dirty` when the tree had
+changes) and records it as `arvel-sandbox-guest-<arch>`. It needs nothing but
+oras and Python's standard library (`python3 mirror.py guest DIR` works
+without uv). arvel-sandbox's `.github/workflows/guest.yml` does this on
+GitHub's Linux runners for both architectures and opens the lock's pull
+request here; by hand, on a Mac:
+
+```bash
+(cd ../arvel-sandbox && make guest && ROOTFS_TAR=1 make disks && make bundle)
+python3 mirror.py guest ../arvel-sandbox/guest/out/bundle-arm64
+```
+
 The build is not reproducible bit for bit: a build already in `.work/` is
 reused, and the lock records what it was built from (`built_on`: the CI
 run, its commit, the runner image, the compilers, the smoke check, the
@@ -110,6 +130,7 @@ Each consumer pins what it uses, copied from `models.lock.json`:
 | brainy, Galley (Helm) | `tei.bundle`, `tei.revision`, `tei.image`, `tei.puller.image` in `values.yaml` | an oras init container, with the `ghcr-pull` secret |
 | brainy, Galley (compose) | the `tei-model` service, `*_TEI_IMAGE` | the same, with `GHCR_USER`/`GHCR_TOKEN` from `.env` |
 | logbook | the files' sha256 in `crates/engine/src/mirror.rs` (`parakeet`, `parakeet-voice`, `libparakeet`) | logbook-server itself, by blob digest, on first start |
+| arvel-sandbox | the manifest digest per architecture in `cmd/sandbox-vm/guestpin.go` (`arvel-sandbox-guest`) | the `sandbox-vm` binary itself, at a start, into `~/.cache/brainy-org/arvel-sandbox-guest-<digest>/` |
 | arvel | manifest digests and files' sha256 in `src/setup/mirror/pins.rs` (`parakeet`, `libparakeet`, `qwen3-tts`, `localvqe`, `libqwen`, `liblocalvqe`, `face-landmarker`) | the `arvel` binary itself, by blob digest, on first start, into `~/.cache/brainy-org` (logbook's folders for what both load) |
 | the `ae` VM's TEI | brainy's `helm/README.md` | `oras pull` |
 
@@ -153,7 +174,11 @@ is public since 2026-10-31, for arvel too. `models/libqwen` (MIT) and
 too; a tag pushed to a public package is public, the Linux and Windows
 ones included (the CUDA ones carry NVIDIA's runtime, which its EULA lets
 an application redistribute). `models/face-landmarker` (Apache-2.0, by
-Google's model cards) is public since 2026-11-03, for arvel's `--gaze`. The others are private, readable with the organization's pull secret
+Google's model cards) is public since 2026-11-03, for arvel's `--gaze`. `models/arvel-sandbox-guest` is private (2026-11-22): `sandbox-vm` pulls it with
+a token (`SANDBOX_GHCR_TOKEN`); making it public waits for its `NOTICE.md` to
+be read for redistribution (GPL-2.0 kernel and busybox, Debian's packages,
+Chromium). Its package grants arvel-sandbox's Actions write access (its
+`guest.yml` pushes with `GITHUB_TOKEN`). The others are private, readable with the organization's pull secret
 (`ghcr-pull` in the clusters) or a token with `read:packages`. GitHub
 Actions read them with `GITHUB_TOKEN` only where a package grants the
 repository access (package settings, "Manage Actions access"): brainy-worker

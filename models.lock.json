@@ -1,5 +1,99 @@
 {
   "bundles": {
+    "arvel-sandbox-guest-arm64": {
+      "built_from": {
+        "commit": "e150f7ea1c2edca5e08fae0d81459b6bb4087703",
+        "dirty": true,
+        "repo": "https://github.com/brainy-org/arvel-sandbox"
+      },
+      "files": {
+        "Image.zst": {
+          "sha256": "1267671ac27123dbf080cdaeffb642cc00dfa14549d992c137b099ecbd51a2ac",
+          "size": 9746082
+        },
+        "NOTICE.md": {
+          "sha256": "43c9e9de37df5bea44f6613055a8ae1e255cd9da1984bae0c83102c36add0293",
+          "size": 1773
+        },
+        "guest.json": {
+          "sha256": "19f4949c502dd1242f96fc747cd56649ddaa8e587c01301472082525fc197650",
+          "size": 2213
+        },
+        "initramfs.cpio.gz": {
+          "sha256": "440f60575fe1ba369edfbb556fce4140d3857416fcd28c134146f495e943fbda",
+          "size": 12733528
+        },
+        "packages-sandbox.txt": {
+          "sha256": "768dd9722b6398c5b3444ec8bf18e7b0b380393349b452b670a72acb385ec878",
+          "size": 18137
+        },
+        "packages-toolbox.txt": {
+          "sha256": "d21b7e1648e939763ab3a64b519169714d9f1ab10fc699afe31aec49a8fd35fa",
+          "size": 3955
+        },
+        "sandbox-root.img.zst": {
+          "sha256": "494e2b0e101234d8869424e058801dc295c8d06f6c23fe2033ba7ee64572337a",
+          "size": 853472874
+        },
+        "sandbox-rootfs.tar.zst": {
+          "sha256": "10e8c8c83bd7e06f0b5d1b53fcd63729db2df7861f2d68770d6eb5c7ec273829",
+          "size": 552456406
+        },
+        "toolbox-root.img.zst": {
+          "sha256": "f4cb9e2854c74b81fbcd398b20234fa8d7348eb79ed1533dabd97d4a097b0d10",
+          "size": 381307411
+        },
+        "toolbox-rootfs.tar.zst": {
+          "sha256": "e12c0f326f8234e45c95bbfabe45db634978f8907d3355db996275dfda1b571a",
+          "size": 253375944
+        }
+      },
+      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:e150f7ea-dirty-linux-arm64@sha256:1d7a88d3a3396bb1912a7d41ba878a67e1fdad19239ede9765e0575cc9d018d3",
+      "sources": [
+        {
+          "kernel": "6.18.60-0-virt",
+          "licence": "GPL-2.0 (Linux), busybox GPL-2.0, musl MIT, others per package",
+          "name": "alpine",
+          "version": "3.24.4",
+          "what": "netboot vmlinuz-virt and modloop-virt (the kernel and its modules), minirootfs (the initramfs)"
+        },
+        {
+          "commit": "e150f7ea1c2edca5e08fae0d81459b6bb4087703",
+          "licence": "the repository's",
+          "name": "arvel-sandbox",
+          "repo": "https://github.com/brainy-org/arvel-sandbox"
+        },
+        {
+          "licence": "BSD-3-Clause and others (Chromium's credits, about:credits)",
+          "name": "chromium",
+          "playwright_revision": "1248",
+          "version": "156.0.8078.4",
+          "what": "Chrome for Testing and Chrome Headless Shell, as Playwright installs them"
+        },
+        {
+          "image": "debian:bookworm-slim",
+          "layer": "sha256:2d66c782e4847b8495b17a4b86be1159aa13d140fe4fd17cb1d536953d5114c6",
+          "licence": "per package (/usr/share/doc/*/copyright in each root)",
+          "name": "debian",
+          "packages": "packages-sandbox.txt, packages-toolbox.txt",
+          "upgraded": "at build time"
+        },
+        {
+          "licence": "Apache-2.0",
+          "name": "playwright",
+          "version": "1.64.1"
+        },
+        {
+          "licence": "curl (MIT-like)",
+          "name": "static-curl",
+          "repo": "https://github.com/stunnel/static-curl",
+          "version": "8.23.0-1"
+        }
+      ],
+      "used_by": [
+        "arvel-sandbox (sandbox-vm's guest)"
+      ]
+    },
     "docling": {
       "files": {
         "NOTICE.md": {

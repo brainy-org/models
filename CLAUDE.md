@@ -16,6 +16,7 @@ uv run mirror.py build <bundle>    # fetch and check into .work/, no push
 uv run mirror.py push <bundle>     # needs `oras login ghcr.io` (write:packages)
 uv run mirror.py images | vendor
 uv run mirror.py ci <run id>       # libraries built by native.yml into .work/
+python3 mirror.py guest <dir>      # arvel-sandbox's guest, built there (guest/bundle.sh)
 uvx ruff check .                   # mirror.py and finetune/ (ruff.toml)
 ```
 
@@ -32,8 +33,12 @@ uvx ruff check .                   # mirror.py and finetune/ (ruff.toml)
 - **Changing a pin is a change in every consumer** (README, "Consumers"):
   brainy-worker's `models.json`, the charts' `tei.*`, the compose files,
   logbook's `crates/engine/src/mirror.rs`, arvel's
-  `src/setup/mirror/pins.rs`. One
-  commit per repository.
+  `src/setup/mirror/pins.rs`, arvel-sandbox's `cmd/sandbox-vm/guestpin.go`.
+  One commit per repository.
+- **`arvel-sandbox-guest` is built by arvel-sandbox, recorded here**: its
+  sources are its `guest.json` (Alpine, static curl, Debian's layer by digest,
+  Playwright, the arvel-sandbox commit); `mirror.py guest` refuses a folder
+  with a file it does not know. A dirty tree's bundle is tagged `-dirty`.
 - **The `docling` bundle follows brainy-worker's `uv.lock`**: the docling
   and rapidocr versions in `mirror.py`'s header must match it, or the bundle
   lacks files that docling asks for (and the worker, offline, fails).
