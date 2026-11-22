@@ -60,8 +60,8 @@ are scored on the same files.
 
 ## On Kaggle
 
-Everything heavy runs there; the repository is private, so the scripts go as
-a private dataset: on kaggle.com, *Datasets → New Dataset*, upload this
+Everything heavy runs there; the scripts go as a private dataset (they read
+private recordings, which never leave it): on kaggle.com, *Datasets → New Dataset*, upload this
 folder's files, name it e.g. `parakeet-finetune`. Kaggle mounts what a
 notebook attaches under `/kaggle/input/`: run `!ls -R /kaggle/input | head`
 and adjust the paths below. A first Python cell names the scripts' folder,
@@ -248,13 +248,13 @@ recordings first (below), to find where it fails in the real room; if the
 failures are there, mix other languages into the batches (English at least)
 and stop at the best validation.
 
-## The base on the owner's recordings (2026-11-10)
+## The base on the owner's recordings
 
 The room is hard and the base does no worse than Whisper there: there is not
 enough of it to train on, and it is the only real measure, so it stays the
 evaluation set. 406 phrases (25.3 min) cut by Silero's VAD from
-`arvel chat --record-room` files of 2026-11-07 and 2026-11-10 (a family at
-home, children's voices, people talking over each other), drafted by the
+the owner's own `arvel chat --record-room` files (a room with several
+people, talking over each other), drafted by the
 mirror's parakeet GGUF (through libparakeet, `it`, no primer) and Whisper
 large-v3, corrected by ear by the owner; 121 phrases (5.9 min) were
 unintelligible to a person too and are left out. Scored with this recipe's
@@ -292,7 +292,7 @@ normalisation, on 285 phrases, 2,693 words:
 - **The audio itself**: 121 of 367 phrases were unintelligible to the owner
   too. Their speech is only ~4 dB quieter than the clear ones (-18 vs -14
   dBFS) at a similar distance from the noise floor (28 vs 32 dB): distance,
-  reverberation, overlapping voices and children, not level or noise. No
+  reverberation and overlapping voices, not level or noise. No
   model does better than a listener there; only the microphone's place does.
 - **The name**: 48 occurrences, about two thirds misspelled ("harvel",
   "albert", "well"). arvel matches it by sound and searches the beam's other

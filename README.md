@@ -18,7 +18,7 @@ model that its author deletes, moves or rewrites changes nothing for us.
 | `libqwen` bundles: qwentts.cpp's C API built here, one tag per platform: macOS arm64 with Metal; Linux x64 on the CPU, Vulkan or CUDA; Linux arm64 on the CPU; Windows x64 on the CPU, Vulkan or CUDA; each with its `qwen.h` (the CUDA ones with NVIDIA's runtime) | `ghcr.io/brainy-org/models/libqwen` | arvel (TTS) |
 | `liblocalvqe` bundles: LocalVQE's C API built here on the CPU with `patches/localvqe-no-prealign.patch`, one tag per platform (macOS arm64, Linux x64 and arm64, Windows x64), each with its `localvqe_api.h` and the patches | `ghcr.io/brainy-org/models/liblocalvqe` | arvel (`--aec localvqe`) |
 | `face-landmarker` bundle: MediaPipe Face Landmarker (float16, version 1), the `.task` file Google publishes at a versioned URL (face detector, face mesh, blendshapes; Apache-2.0) | `ghcr.io/brainy-org/models/face-landmarker` | arvel (`--gaze`, served to the satellite's page) |
-| `arvel-sandbox-guest` bundles: arvel-sandbox's guest, one tag per architecture (`<commit>-linux-arm64`, `-amd64`): the kernel (Alpine's linux-virt), the initramfs, the sandbox's and the toolbox's Debian root disks with Playwright's Chromium (zstd), the same roots as tars for a pod's image, the package lists, `guest.json`. Built by arvel-sandbox, not here | `ghcr.io/brainy-org/models/arvel-sandbox-guest` | arvel-sandbox (`sandbox-vm`'s guest) |
+| `arvel-sandbox-guest` bundles: arvel-sandbox's guest, one tag per architecture (`<commit>-linux-arm64`, `-amd64`): the kernel (Alpine's linux-virt), the initramfs, the sandbox's and the toolbox's Debian root disks with Playwright and Debian's chromium (zstd), the same roots as tars for a pod's image, the package lists, `guest.json`. Built by arvel-sandbox, not here | `ghcr.io/brainy-org/models/arvel-sandbox-guest` | arvel-sandbox (`sandbox-vm`'s guest) |
 | Images: Text Embeddings Inference (amd64, arm64), oras | `ghcr.io/brainy-org/mirror/*` | the Helm charts and compose files of brainy and Galley |
 | Build inputs: ffmpeg's source, libparakeet | `ghcr.io/brainy-org/vendor/brainy-worker-build` | brainy-worker's Dockerfile (`VENDOR_IMAGE`) |
 
@@ -84,7 +84,7 @@ of the driver).
 `guest/build.sh`, `guest/disks.sh` and `guest/bundle.sh`; on a Mac in a
 builder VM, on Linux in a chroot), from pinned inputs (Alpine's and static
 curl's files by sha256, Debian's layer by digest, Playwright by version; the
-Debian packages are those of the day, upgraded) and records them in the
+Debian packages, chromium among them, are those of the day, upgraded) and records them in the
 bundle's `guest.json`. `mirror.py guest DIR` takes the folder `bundle.sh`
 made, writes its `NOTICE.md` from `guest.json`, pushes it as
 `arvel-sandbox-guest:<commit>-linux-<arch>` (`-dirty` when the tree had
@@ -174,12 +174,25 @@ is public since 2026-10-31, for arvel too. `models/libqwen` (MIT) and
 too; a tag pushed to a public package is public, the Linux and Windows
 ones included (the CUDA ones carry NVIDIA's runtime, which its EULA lets
 an application redistribute). `models/face-landmarker` (Apache-2.0, by
-Google's model cards) is public since 2026-11-03, for arvel's `--gaze`. `models/arvel-sandbox-guest` is private (2026-11-22): `sandbox-vm` pulls it with
-a token (`SANDBOX_GHCR_TOKEN`); making it public waits for its `NOTICE.md` to
-be read for redistribution (GPL-2.0 kernel and busybox, Debian's packages,
-Chromium). Its package grants arvel-sandbox's Actions write access (its
+Google's model cards) is public since 2026-11-03, for arvel's `--gaze`. `models/arvel-sandbox-guest`
+was public, and its versions built before 2026-11-22's fix are being deleted (the one exception
+to "a digest is never deleted"): their roots carried Playwright's `chromium`, which is Google
+Chrome for Testing with the Widevine CDM (`libwidevinecdm.so`), whose licence forbids
+distribution. The roots now carry Debian's `chromium` package (BSD-3-Clause and others) as
+Playwright's browser, and arvel-sandbox's build fails if a Google Chrome, Widevine or
+Playwright-downloaded browser file is in a root (`guest/make-root`, `guest/bundle.sh`). Only
+redistributable open-source software goes in it: the kernel and busybox (GPL-2.0, Alpine's),
+Debian's packages, Playwright (Apache-2.0), arvel-sandbox's own code; each bundle's `NOTICE.md`
+lists the sources and licences and carries the written offer of the GPL's corresponding source
+(GPL-2.0 §3(b)). Making a new version public is the owner's decision once its `NOTICE.md` has
+been read; until then `sandbox-vm` pulls it with a token (`SANDBOX_GHCR_TOKEN`). Its package grants arvel-sandbox's Actions write access (its
 `guest.yml` pushes with `GITHUB_TOKEN`). The others are private, readable with the organization's pull secret
 (`ghcr-pull` in the clusters) or a token with `read:packages`. GitHub
 Actions read them with `GITHUB_TOKEN` only where a package grants the
 repository access (package settings, "Manage Actions access"): brainy-worker
 needs `models/docling`, `models/parakeet` and `vendor/brainy-worker-build`.
+
+## Licence
+
+The code here (`mirror.py`, `finetune/`, `patches/`, the workflows) is under the Apache License 2.0
+(`LICENSE`). The bundles are not: each carries its own sources and licences in its `NOTICE.md`.

@@ -1274,16 +1274,20 @@ def _guest_notice(record: dict) -> str:
         (
             "Playwright",
             f"playwright {sources['playwright']['version']} from PyPI (/opt/pagecheck, /opt/routine)",
-            "Apache-2.0",
+            "Apache-2.0; its driver's Node.js MIT and the licences of its dependencies",
         ),
         (
             "Chromium",
             (
-                f"Chrome for Testing and Chrome Headless Shell {sources['chromium']['version']} "
-                f"(Playwright's revision {sources['chromium']['playwright_revision']}), "
-                "as Playwright installs them"
+                f"Debian's chromium {sources['chromium']['version']} (bookworm-security), "
+                "Playwright's browser in both roots; no browser of Playwright's download "
+                "(its `chromium` is Google Chrome for Testing, not redistributable)"
             ),
-            "BSD-3-Clause and the licences of its third-party code (Chromium's about:credits)",
+            (
+                "BSD-3-Clause and the licences of its third-party code "
+                "(/usr/share/doc/chromium/copyright); source: "
+                f"{sources['chromium']['source']}"
+            ),
         ),
     ]
     lines = [
@@ -1300,7 +1304,17 @@ def _guest_notice(record: dict) -> str:
         "",
         (
             "The GPL's corresponding source of the kernel, busybox and the Debian packages is "
-            "published by Alpine and Debian at the versions above."
+            "published by Alpine and Debian at the versions above (Alpine's aports at its "
+            "release's tag, Debian's at https://snapshot.debian.org and "
+            "https://sources.debian.org for the versions in packages-<role>.txt)."
+        ),
+        "",
+        (
+            "Written offer: for three years from the date this bundle was published, brainy-org "
+            "will give anyone who asks a copy of the complete corresponding source code of the "
+            "GPL- and LGPL-licensed software in this bundle, at no more than the cost of "
+            "providing it (GPL-2.0 section 3(b)). Ask by opening an issue at "
+            "https://github.com/brainy-org/models/issues, naming this bundle's tag."
         ),
     ]
     return "\n".join(lines) + "\n"

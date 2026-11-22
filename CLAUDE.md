@@ -37,7 +37,9 @@ uvx ruff check .                   # mirror.py and finetune/ (ruff.toml)
   One commit per repository.
 - **`arvel-sandbox-guest` is built by arvel-sandbox, recorded here**: its
   sources are its `guest.json` (Alpine, static curl, Debian's layer by digest,
-  Playwright, the arvel-sandbox commit); `mirror.py guest` refuses a folder
+  Playwright, Debian's chromium, the arvel-sandbox commit); no Google Chrome
+  (Playwright's own `chromium` is Chrome for Testing, with Widevine: not
+  redistributable); `mirror.py guest` refuses a folder
   with a file it does not know. A dirty tree's bundle is tagged `-dirty`.
 - **The `docling` bundle follows brainy-worker's `uv.lock`**: the docling
   and rapidocr versions in `mirror.py`'s header must match it, or the bundle
