@@ -2,7 +2,7 @@
   "bundles": {
     "arvel-sandbox-guest-amd64": {
       "built_from": {
-        "commit": "9dd404275e591931f94a8ac80550781ab383a8f9",
+        "commit": "5148b96dde80d909e568679b352b083ad6c7d73f",
         "dirty": false,
         "repo": "https://github.com/brainy-org/arvel-sandbox"
       },
@@ -12,16 +12,16 @@
           "size": 12528433
         },
         "NOTICE.md": {
-          "sha256": "bd3dd1fb20cb877096ec7f82dcec2d05ac73f3216f61e7b41163804cbbff5831",
+          "sha256": "9750de4230fd0c81e4af106c44d08efa6f1652b533cccf0d32759f8c374d6d42",
           "size": 2506
         },
         "guest.json": {
-          "sha256": "22bffb56d9970cc3e34156ac33b31e8970606fb7fe8ba8d0cfbe211bab8d50ae",
-          "size": 2322
+          "sha256": "ae4d14420d2a311a9ddd0d31328ae9f0c65d0314496c8f48e76ddb2510343879",
+          "size": 2740
         },
         "initramfs.cpio.gz": {
-          "sha256": "b5701188fee2e443c020f64794916551d97f24827ec4542ebc4911a8ebf1fe0c",
-          "size": 12819661
+          "sha256": "7c8da89fffd9e63bf78304532df191262813096a56845dbd94077ad0c20d29d8",
+          "size": 13004166
         },
         "packages-sandbox.txt": {
           "sha256": "10cfc9af5ce8b06c94844ea32dada90f59e440b25aebeb402103737a7615ff53",
@@ -32,23 +32,31 @@
           "size": 6839
         },
         "sandbox-root.img.zst": {
-          "sha256": "85cc9eab7be1f41d603fd7a6cc07168ccdd69fe1a2ba68fc32b012e0961272e8",
-          "size": 814274144
+          "sha256": "8f54151b50f21e2104045477e65f72da9f660ea25cc31160c967dba056ccc77c",
+          "size": 738957876
+        },
+        "sandbox-root.vhdx.zst": {
+          "sha256": "4ddcb858c96769b2d9041940b8d184386c982871cca37dbd3d7f7fc0de287dc1",
+          "size": 738719690
         },
         "sandbox-rootfs.tar.zst": {
-          "sha256": "d762c65a7946363256b3e85834043aab49271246fb7a906cc8bcedd4916a85a0",
-          "size": 447023951
+          "sha256": "104fe1bb99896c71128badfabdd934df51e44ecbb57d11d8156728ac31da38a3",
+          "size": 447001339
         },
         "toolbox-root.img.zst": {
-          "sha256": "ddeb960f13bf1752b1e8c9c498326a5826306d61af7ab4ba7cc3e3995e193530",
-          "size": 499096107
+          "sha256": "a8a43b1b2de44e6b7833a6fc6cf44554f3eb69945b4939c9ffc4194f3eca0bdd",
+          "size": 512919980
+        },
+        "toolbox-root.vhdx.zst": {
+          "sha256": "deb3e684496e72c35ec676be2cbc1b5db99e549b6688dafe7075a543c1239783",
+          "size": 512949504
         },
         "toolbox-rootfs.tar.zst": {
-          "sha256": "6b6c59fbfc472650e4eae591fa01a0afc09c244d9e047fe816d55b15903c9281",
-          "size": 301642069
+          "sha256": "47a3bcddd3693a0ad96cc8e68051ff6d97e0d4b44a73f28041622b3439457edd",
+          "size": 301633632
         }
       },
-      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:9dd40427-linux-amd64@sha256:e96f4da3ddad034b6482ca80cac0153727d618aa844316b3a3701c0423a5687c",
+      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:5148b96d-linux-amd64@sha256:0b5d7950b40512fbcfcbfd4e4669180005198f0a45a3f000ef75e90d335c17e9",
       "sources": [
         {
           "kernel": "6.18.60-0-virt",
@@ -58,7 +66,7 @@
           "what": "netboot vmlinuz-virt and modloop-virt (the kernel and its modules), minirootfs (the initramfs)"
         },
         {
-          "commit": "9dd404275e591931f94a8ac80550781ab383a8f9",
+          "commit": "5148b96dde80d909e568679b352b083ad6c7d73f",
           "licence": "the repository's",
           "name": "arvel-sandbox",
           "repo": "https://github.com/brainy-org/arvel-sandbox"
@@ -97,7 +105,7 @@
     },
     "arvel-sandbox-guest-arm64": {
       "built_from": {
-        "commit": "9dd404275e591931f94a8ac80550781ab383a8f9",
+        "commit": "5148b96dde80d909e568679b352b083ad6c7d73f",
         "dirty": false,
         "repo": "https://github.com/brainy-org/arvel-sandbox"
       },
@@ -107,16 +115,16 @@
           "size": 9746082
         },
         "NOTICE.md": {
-          "sha256": "c84d9761082c4b7a3f0e1cc3ed5f1deeef9d19b597dd0cd54f54694a3cb98866",
+          "sha256": "67fdc6a37886b0b5c7986a6663826894c98acdc4d19798bb0b59b0fc9cef6a14",
           "size": 2506
         },
         "guest.json": {
-          "sha256": "6f3ccabca8d1217c50541042cbf2f458516b6004aa4c31ad8a0c2d01428de8ff",
+          "sha256": "f489c1335d15b71e6e869294e98c759acbe2f8dff0f82569ccd31023a30f2eb2",
           "size": 2322
         },
         "initramfs.cpio.gz": {
-          "sha256": "abe29970e8f4f96ccd4329de800d5d379f0f78bea90befec91fa59620f61ed9f",
-          "size": 12778873
+          "sha256": "894657ceb7edf31b1f6237d058ec8fb3629fa855b1e9e9224203dd3608c2ae3a",
+          "size": 12779867
         },
         "packages-sandbox.txt": {
           "sha256": "397e7825779ed9bc67227f6833d1d31e5db07cac1d30e72fcc6d0036509c9ab3",
@@ -127,23 +135,23 @@
           "size": 6791
         },
         "sandbox-root.img.zst": {
-          "sha256": "37e4b542c5f420f32c4279fb6c57f7c237f55850301f37a3ff85f00a661c3e61",
-          "size": 776803753
+          "sha256": "722064ddb01ca1833b20dcb408c8b3db5cca1f2119991c8ce0d9459c2304a9c5",
+          "size": 771070594
         },
         "sandbox-rootfs.tar.zst": {
-          "sha256": "a7c2927fec9d8dc7e9a2c795091a666d52b5f4d7eb7ea65fe766c9a395a57963",
-          "size": 442592194
+          "sha256": "39ba7dd52d4fda0cb9853a92ea6fa5a981d87c447fcf8bb3d4e416af9fd8d719",
+          "size": 442583520
         },
         "toolbox-root.img.zst": {
-          "sha256": "fe0cbcf791884c0202e10a9321ecfc6a5cfec6107f8916ae5c8c16a5da0168cc",
-          "size": 501823895
+          "sha256": "18c6c5202afb4a21d944a7dc9e44ecfc507929f13265017b347e004b56806e01",
+          "size": 405513004
         },
         "toolbox-rootfs.tar.zst": {
-          "sha256": "01e2993bf10500653c0e0c4a16e060eeb41634e80e96045026e188f9d6950cd4",
-          "size": 301385009
+          "sha256": "90f7ddb40038ff888ee87f3cd7a2b2c02f69c441e687a222854aa41dc003e0a7",
+          "size": 301385111
         }
       },
-      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:9dd40427-linux-arm64@sha256:39f75399f6c0746b6c198fe21e6b9e2232ff0f5c59a01b537c228ac6605163d1",
+      "ref": "ghcr.io/brainy-org/models/arvel-sandbox-guest:5148b96d-linux-arm64@sha256:981c71fa67ba3592486283820e5d0bb27c4d3254390c55a153956eb9d8ac1d50",
       "sources": [
         {
           "kernel": "6.18.60-0-virt",
@@ -153,7 +161,7 @@
           "what": "netboot vmlinuz-virt and modloop-virt (the kernel and its modules), minirootfs (the initramfs)"
         },
         {
-          "commit": "9dd404275e591931f94a8ac80550781ab383a8f9",
+          "commit": "5148b96dde80d909e568679b352b083ad6c7d73f",
           "licence": "the repository's",
           "name": "arvel-sandbox",
           "repo": "https://github.com/brainy-org/arvel-sandbox"
