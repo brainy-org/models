@@ -1224,6 +1224,9 @@ GUEST_FILES = (
 GUEST_OPTIONAL = (
     "sandbox-rootfs.tar.zst",
     "toolbox-rootfs.tar.zst",
+    # amd64: the root disks as VHDX, what sandbox-vm boots on Windows (HCS).
+    "sandbox-root.vhdx.zst",
+    "toolbox-root.vhdx.zst",
     "packages-sandbox.txt",
     "packages-toolbox.txt",
 )
